@@ -46,11 +46,11 @@ class UserController extends Controller
 
             return datatables()->of($user->files->where('type', $type))->addColumn('action', '<div class="btn-group btn-group-sm d-flex justify-content-end" role="group" aria-label="Table row actions"><button class="btn btn-success"><a href="/{{$path}}">
                         <i class="material-icons">cloud</i>
-                      </a></button> <button class="btn btn-warning"><a href="/edit_file/{{$id}}">
+                      </a></button> @can("create", App\File::class)<button class="btn btn-warning"><a href="/edit_file/{{$id}}">
                         <i class="material-icons">&#xE3C9;</i>
-                      </a></button> @if(Auth::user()->type=="user")<button type="button" class="btn btn-danger" onclick= "del(' . '{{$id}}' . ')">
+                      </a></button> <button type="button" class="btn btn-danger" onclick= "del(' . '{{$id}}' . ')">
                 <i class="material-icons">&#xE872;</i>
-                </button>@endif</div>')->addColumn('custom_folders', function (File $file) {
+                </button>@endcan</div>')->addColumn('custom_folders', function (File $file) {
                 $allFolders = Folder::all();
                 $boxes = '';
 
@@ -77,11 +77,11 @@ class UserController extends Controller
 
             return datatables()->of($folder->files)->addColumn('action', '<div class="btn-group btn-group-sm d-flex justify-content-end" role="group" aria-label="Table row actions"><button class="btn btn-success"><a href="/{{$path}}">
                         <i class="material-icons">cloud</i>
-                      </a></button> <button class="btn btn-warning"><a href="/edit_file/{{$id}}">
+                      </a></button> @can("create", App\File::class) <button class="btn btn-warning"><a href="/edit_file/{{$id}}">
                         <i class="material-icons">&#xE3C9;</i>
-                      </a></button> @if(Auth::user()->type=="user")<button type="button" class="btn btn-danger" onclick= "del(' . '{{$id}}' . ')">
+                      </a></button><button type="button" class="btn btn-danger" onclick= "del(' . '{{$id}}' . ')">
                 <i class="material-icons">&#xE872;</i>
-                </button>@endif</div>')->addColumn('custom_folders', function (File $file) {
+                </button>@endcan</div>')->addColumn('custom_folders', function (File $file) {
                 $allFolders = Folder::all();
                 $boxes = '';
 
@@ -127,14 +127,15 @@ class UserController extends Controller
 
     public function showEditFile(File $file)
     {
-        $this->authorize('update', $file);
+        $this->authorize('create', App\File::class);
+
         $user = $file->user;
         return view('user.editfile', compact('user'));
     }
 
     public function editFile(File $file)
     {
-        $this->authorize('update', $file);
+        $this->authorize('create', App\File::class);
 
         $validate = [
             'filename' => 'required|string|max:150',
