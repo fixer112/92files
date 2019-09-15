@@ -14,10 +14,10 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
-
+    /* protected $fillable = [
+    'name', 'email', 'password',
+    ]; */
+    protected $guarded = [];
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -57,6 +57,14 @@ class User extends Authenticatable
     }
     public function routeRole()
     {
-        return $this->role != 'user' ? 'admin' : 'user';
+        return $this->role != 'user' ? 'admin' : 'user/' . $this->id;
+    }
+    public function photo()
+    {
+        return $this->pic ? 'storage/' . $this->pic : 'assets\app\images\avatars\0.jpeg';
+    }
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = \bcrypt($password);
     }
 }

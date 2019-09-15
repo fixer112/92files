@@ -15,9 +15,15 @@ class Folder extends Model
 
     }
 
+    public function admin()
+    {
+        return $this->belongsTo('App\User', 'admin_id');
+
+    }
+
     public function files()
     {
-        return $this->hasMany('App\File');
+        return $this->belongsToMany('App\File');
 
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCompaniesTable extends Migration
 {
@@ -15,6 +15,17 @@ class CreateCompaniesTable extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('location');
+            $table->string('addr');
+            $table->string('email');
+            $table->string('num');
+            $table->string('state');
+            $table->string('country')->nullable();
+            $table->string('grn');
+            $table->string('type');
+            $table->string('logo')->nullable();
+            $table->string('admin_id');
             $table->timestamps();
         });
     }

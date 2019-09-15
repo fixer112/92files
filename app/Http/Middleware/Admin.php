@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class Admin
+class admin
 {
     /**
      * Handle an incoming request.
@@ -20,5 +20,6 @@ class Admin
             abort(403, 'Unauthorized action.');
         }
         return $next($request);
+
     }
 }

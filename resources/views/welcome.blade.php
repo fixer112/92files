@@ -27,8 +27,8 @@
 
     <!-- favicons
     ================================================== -->
-    <link rel="shortcut icon" href="{{ asset('assets\home\favicon.ico')}}" type="image/x-icon">
-    <link rel="icon" href="{{ asset('assets\home\favicon.ico')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('assets\app\images\logo.png')}}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('assets\app\images\logo.png')}}" type="image/x-icon">
 
 </head>
 
@@ -45,7 +45,8 @@
 
         <div class="header-logo">
             <a class="site-logo" href="index.html">
-                <img src="{{ asset('assets/home/images/logo.jpg')}}" alt="Homepage">
+                <img src="{{ asset('storage/logo/92files.jpeg')}}" alt="Homepage">
+                {{-- <img src="{{ asset('assets/home/images/logo.jpg')}}" alt="Homepage"> --}}
             </a>
         </div>
 
@@ -54,7 +55,7 @@
                 <li><a href="{{url('/')}}" title="about">Home</a></li>
                 <li><a href="{{url('about')}}" title="about">About Us</a></li>
                 @if(Auth::check())
-                <li><a href="{{url(Auth::user()->routeRole() . '/' . Auth::id())}}" title="Dashbord">Dashbord</a></li>
+                <li><a href="{{url(Auth::user()->routeRole())}}" title="Dashbord">Dashbord</a></li>
                 <li><a href="{{url('logout')}}" title="login">Sign Out</a></li>
                 @else
                 <li><a href="{{url('login')}}" title="login">Sign In</a></li>

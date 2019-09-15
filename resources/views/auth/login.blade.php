@@ -29,11 +29,24 @@ Access your account
         </span>
         @enderror
     </div>
+    <div class="form-group mb-3 d-table mx-auto">
+        <div class="custom-control custom-checkbox mb-1">
+            <input type="checkbox" name="remember" class="custom-control-input @error('remember') is-invalid @enderror"
+                id="customCheck2">
+            <label class="custom-control-label" for="customCheck2">Remember me for 30 days.</label>
+        </div>
+        @error('remember')
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
+    </div>
     <button type="submit" class="btn btn-pill btn-accent d-table mx-auto">Access
         Account</button>
 </form>
 @endsection
 @section('buttom')
-<a href="{{route('password.request')}}">Forgot your password?</a>
+{{-- <a href="{{route('password.request')}}">Forgot your password?</a> --}}
+<a href="{{url('reset')}}">Forgot your password?</a>
 <a class="ml-auto" href="{{route('homepage')}}">Homepage</a>
 @endsection

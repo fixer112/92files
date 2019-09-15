@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -44,6 +46,19 @@ class LoginController extends Controller
     }
     public function redirectTo()
     {
-        return Auth::user()->routeRole() . '/' . Auth::id();
+
+        return Auth::user()->routeRole();
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if (!$user->api_token) {
+            $user->update(['api_token' => Str::random(60)]);
+        }
+
+    }
+    protected function loggedOut(Request $request)
+    {
+        return redirect('login');
     }
 }
