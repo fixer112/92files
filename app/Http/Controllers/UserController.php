@@ -44,7 +44,7 @@ class UserController extends Controller
         $this->authorize('viewBlade', $user);
         if (request()->wantsJson()) {
 
-            return datatables()->of($user->files->where('type', $type))->addColumn('action', '<div class="btn-group btn-group-sm d-flex justify-content-end" role="group" aria-label="Table row actions"><button class="btn btn-success"><a href="/{{$path}}">
+            return datatables()->of($user->files->where('type', $type))->addColumn('action', '<div class="btn-group btn-group-sm d-flex justify-content-end" role="group" aria-label="Table row actions"><button class="btn btn-success"><a href="/storage/{{$path}}">
                         <i class="material-icons">cloud</i>
                       </a></button> @can("create", App\File::class)<button class="btn btn-warning"><a href="/edit_file/{{$id}}">
                         <i class="material-icons">&#xE3C9;</i>
@@ -75,7 +75,7 @@ class UserController extends Controller
 
         if (request()->wantsJson()) {
 
-            return datatables()->of($folder->files)->addColumn('action', '<div class="btn-group btn-group-sm d-flex justify-content-end" role="group" aria-label="Table row actions"><button class="btn btn-success"><a href="/{{$path}}">
+            return datatables()->of($folder->files)->addColumn('action', '<div class="btn-group btn-group-sm d-flex justify-content-end" role="group" aria-label="Table row actions"><button class="btn btn-success"><a href="/storage/{{$path}}">
                         <i class="material-icons">cloud</i>
                       </a></button> @can("create", App\File::class) <button class="btn btn-warning"><a href="/edit_file/{{$id}}">
                         <i class="material-icons">&#xE3C9;</i>
