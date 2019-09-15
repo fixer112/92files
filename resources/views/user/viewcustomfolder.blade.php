@@ -37,7 +37,8 @@
             <div class="card card-small edit-user-details mb-4 margin-top40"
                 style="overflow:hidden;box-shadow:inset 0 4px 0 0 #17c671;border-radius:.625rem">
                 <div class="card-body p-0">
-                    <form action="{{url('add_file')}}" class="py-4" method="POST" enctype="multipart/form-data">
+                    <form action="{{url('/user/'.request()->user->id.'/add_file')}}" class="py-4" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         <div class="form-row mx-4">
                             <div class="col-lg-12">
