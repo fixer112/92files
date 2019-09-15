@@ -477,3 +477,7 @@ legend {
 button a {
     color: white;
 }
+
+.dropdown-menu-small {
+    margin-right: -61px;
+}
