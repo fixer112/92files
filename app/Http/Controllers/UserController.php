@@ -44,7 +44,7 @@ class UserController extends Controller
         $this->authorize('viewBlade', $user);
         if (request()->wantsJson()) {
 
-            return datatables()->of($user->files->where('type', $type))->addColumn('action', '<div class="btn-group btn-group-sm d-flex justify-content-end" role="group" aria-label="Table row actions"><button class="btn btn-success"><a href="/storage/{{$path}}">
+            return datatables()->of($user->files->where('type', $type))->addColumn('action', '<div class="btn-group btn-group-sm d-flex justify-content-end" role="group" aria-label="Table row actions"><button class="btn btn-success"><a href="/file/{{$id}}">
                         <i class="material-icons">cloud</i>
                       </a></button> @can("create", App\File::class)<button class="btn btn-warning"><a href="/edit_file/{{$id}}">
                         <i class="material-icons">&#xE3C9;</i>
@@ -75,7 +75,7 @@ class UserController extends Controller
 
         if (request()->wantsJson()) {
 
-            return datatables()->of($folder->files)->addColumn('action', '<div class="btn-group btn-group-sm d-flex justify-content-end" role="group" aria-label="Table row actions"><button class="btn btn-success"><a href="/storage/{{$path}}">
+            return datatables()->of($folder->files)->addColumn('action', '<div class="btn-group btn-group-sm d-flex justify-content-end" role="group" aria-label="Table row actions"><button class="btn btn-success"><a href="/file/{{$id}}">
                         <i class="material-icons">cloud</i>
                       </a></button> @can("create", App\File::class) <button class="btn btn-warning"><a href="/edit_file/{{$id}}">
                         <i class="material-icons">&#xE3C9;</i>
@@ -100,6 +100,18 @@ class UserController extends Controller
         //return $user;
 
         return view('user.viewcustomfolder', \compact('user'));
+    }
+
+    public function showFolderUC($uc)
+    {
+        $folder = Folder::where('uc', $uc)->first();
+        if (!$folder) {
+            \abort(404);
+        }
+        $files = $folder->files;
+        //return $files;
+        return view('user.viewfolderuc', \compact('files', 'folder'));
+
     }
 
     public function addFile(User $user)
@@ -160,7 +172,7 @@ class UserController extends Controller
     public function deleteFile(File $file)
     {
         $this->authorize('delete', $file);
-        return 'done';
+        //return 'done';
         Storage::delete($file->path);
 
         $file->delete();
@@ -187,7 +199,7 @@ class UserController extends Controller
         $this->validate(request(), $validate);
 
         $folder = new Folder;
-        $folder->fill(\request()->only(['filename', 'user_id', 'admin_id']))->save();
+        $folder->fill(\request()->only(['foldername', 'user_id', 'admin_id']))->save();
         $folder->update(['uc' => Str::random(15)]);
         request()->session()->flash('success', 'Folder Created Successfully');
         return back();
@@ -220,10 +232,12 @@ class UserController extends Controller
     public function deleteFolder(Folder $folder)
     {
         $this->authorize('delete', $folder);
+        $user = $folder->user;
+        //return $user;
 
         $folder->delete();
         request()->session()->flash('success', 'Folder Deleted Successfully');
-        return back();
+        return redirect('/user/' . $user->id);
 
     }
     public function checkFolder(File $file, Folder $folder)
@@ -245,5 +259,21 @@ class UserController extends Controller
 
         return $this->jsonWebBack(request(), 'success', 'File ' . $type . ' Folder (' . $folder->foldername . ') Successfully');
 
+    }
+    public function downloadFileUc(Folder $folder, File $file)
+    {
+        $check = $folder->files->where('id', $file->id)->first();
+
+        if (!$check) {
+            abort('404');
+        }
+
+        return response()->file(\storage_path('/app/public/' . $file->path));
+    }
+    public function downloadFile(File $file)
+    {
+        $this->authorize('update', $file);
+
+        return response()->file(\storage_path('/app/public/' . $file->path));
     }
 }

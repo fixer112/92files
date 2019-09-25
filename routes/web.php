@@ -14,7 +14,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('homepage');
 
-Auth::routes(['register' => false, 'reset' => false]);
+Auth::routes(['register' => false, 'reset' => true]);
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/admin', 'AdminController@dashboard');
 
@@ -51,15 +51,18 @@ Route::post('/user/{user}/add_file/', 'UserController@addFile');
 Route::post('/edit_file/{file}', 'UserController@editFile');
 Route::get('/edit_file/{file}', 'UserController@showEditFile');
 Route::post('/delete_file/{file}', 'UserController@deleteFile');
+Route::get('/file/{file}', 'UserController@downloadFile');
+Route::get('/file/{folder}/{file}', 'UserController@downloadFileUc');
 
 Route::post('/user/{user}/add_folder/', 'UserController@addFolder');
 Route::get('/user/{user}/add_folder/', 'UserController@showAddFolder');
 Route::post('/edit_folder/{folder}', 'UserController@editFolder');
 Route::get('/edit_folder/{folder}', 'UserController@showEditFolder');
-Route::post('/delete_folder/', 'UserController@deleteFolder');
+Route::post('/delete_folder/{folder}', 'UserController@deleteFolder');
 
 Route::get('user/{user}/folder/{type}', 'UserController@showFolder');
 Route::get('custom_folder/{folder}', 'UserController@showCustomFolder');
+Route::get('uc/{uc}', 'UserController@showFolderUc');
 
 Route::post('/file/{file}/folder/{folder}', 'UserController@checkFolder');
 

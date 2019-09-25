@@ -47,6 +47,6 @@ Access your account
 @endsection
 @section('buttom')
 {{-- <a href="{{route('password.request')}}">Forgot your password?</a> --}}
-<a href="{{url('reset')}}">Forgot your password?</a>
+<a href="{{url('password/reset')}}">Forgot your password?</a>
 <a class="ml-auto" href="{{route('homepage')}}">Homepage</a>
 @endsection

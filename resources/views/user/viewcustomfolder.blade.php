@@ -5,6 +5,15 @@
 <script src="{{ asset('assets\app\scripts\axios.js')}}"></script>
 @endsection
 @section('body')
+<div class="row">
+    <div class="col mb-5">
+        @can('delete', App\Folder::find(request()->folder->id))
+        <button onclick="delFolder()" class="btn btn-sm btn-danger text-white" style="float: right;"><i
+                class="material-icons">delete</i>
+            Delete Folder</button>
+        @endcan
+    </div>
+</div>
 {{-- <div class="col">
     @can('create', App\File::class)
     <a href="{{url('add_file')}}" class="btn btn-sm btn-accent text-white mt-2" style="float: right;"><i
@@ -133,7 +142,25 @@ function del(id){
     },
     
     })
-}
+};
+function delFolder(){
+var myhtml = document.createElement("div");
+var del = '<form action="/delete_folder/'+{{request()->folder->id}}+'" method="POST">@csrf<button type="submit" class="btn btn-danger"><i class="material-icons">&#xE872;</i> Delete File</button>';
+
+    myhtml.innerHTML = del;
+    swal({
+    title: "Are you sure?",
+    content:myhtml,
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+    buttons: {
+    cancel: true,
+    confirm: false,
+    },
+
+    })
+    };
 function checkFolder(fileId,folderId){
 var url = '/file/'+fileId+'/folder/'+folderId+'/?api_token='+'{{Auth::user()->api_token}}';
 var folders = $('.folder-check');

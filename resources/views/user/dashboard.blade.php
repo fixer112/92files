@@ -1,26 +1,17 @@
 @extends('user.layout')
 @section('subtitle','MY ACCOUNT')
 @section('title','Dashboard')
+@section('head')
+<style>
+    i.material-icons.folder {
+        font-size: xx-large;
+    }
+</style>
+@endsection
 @section('body')
 <!-- File Manager - Cards -->
 <div class="file-manager file-manager-cards">
     <div class="card card-small mb-3">
-
-        {{-- <div class="row no-gutters p-2">
-            <div class="col-md-6 offset-md-3">
-                <form action="POST">
-                    <div class="input-group input-group-seamless">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <i class="material-icons">&#xE8B6;</i>
-                            </div>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Search files">
-                        <input type="submit" class="btn btn-md btn-accent " value="Search">
-                    </div>
-                </form>
-            </div>
-        </div> --}}
 
 
     </div>
@@ -45,7 +36,7 @@
                     <div class="card-footer">
                         <span class="file-manager__item-icon">
                             <h5 class=" font-weight-bold text-center">Education</h5>
-                            <i class="material-icons">&#xE2C7;</i>
+                            <i class="material-icons folder">&#xE2C7;</i>
                         </span>
                     </div>
                 </div>
@@ -58,7 +49,7 @@
                     <div class="card-footer">
                         <span class="file-manager__item-icon">
                             <h5 class=" font-weight-bold text-center">Health</h5>
-                            <i class="material-icons">&#xE2C7;</i>
+                            <i class="material-icons folder">&#xE2C7;</i>
                         </span>
                     </div>
                 </div>
@@ -71,7 +62,7 @@
                     <div class="card-footer">
                         <span class="file-manager__item-icon">
                             <h5 class=" font-weight-bold text-center">Others</h5>
-                            <i class="material-icons">&#xE2C7;</i>
+                            <i class="material-icons folder">&#xE2C7;</i>
                         </span>
                     </div>
                 </div>
@@ -96,13 +87,13 @@
                         <div class="card-footer">
                             <span class="file-manager__item-icon">
                                 <h5 class=" font-weight-bold text-center">{{$folder->foldername}}</h5>
-                                <i class="material-icons">&#xE2C7;</i>
 
+                                <i class="material-icons folder float-left">&#xE2C7;</i>
                             </span>
                         </div>
                         <div class="user-details__user-data border-top border-bottom p-4">
                             <div class="row mb-3">
-                                <div class="col col-6 w-50">
+                                <div class="col col-12 w-50">
                                     <span>Unique Code</span>
                                     <span>{{$folder->uc}}</span>
                                 </div>
