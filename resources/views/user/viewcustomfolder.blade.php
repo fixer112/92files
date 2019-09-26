@@ -8,6 +8,8 @@
 <div class="row">
     <div class="col mb-5">
         @can('delete', App\Folder::find(request()->folder->id))
+        <button class="btn btn-sm btn-danger text-white" style="float: left;"><i class="material-icons">edit</i>
+            <a href="{{url('/edit_folder/'.request()->folder->id)}}">Edit Folder</button>
         <button onclick="delFolder()" class="btn btn-sm btn-danger text-white" style="float: right;"><i
                 class="material-icons">delete</i>
             Delete Folder</button>
@@ -46,7 +48,7 @@
             <div class="card card-small edit-user-details mb-4 margin-top40"
                 style="overflow:hidden;box-shadow:inset 0 4px 0 0 #17c671;border-radius:.625rem">
                 <div class="card-body p-0">
-                    <form action="{{url('/user/'.request()->user->id.'/add_file')}}" class="py-4" method="POST"
+                    <form action="{{url('/user/'.$user->id.'/add_file')}}" class="py-4" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="form-row mx-4">

@@ -27,7 +27,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-sm btn-accent ml-auto d-table mr-3">Save Changes</button>
+                    <button type="submit" class="btn btn-sm btn-accent ml-auto d-table mr-3">Add Folder</button>
                 </form>
             </div>
         </div>

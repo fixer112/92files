@@ -59,6 +59,7 @@ class Controller extends BaseController
         $extension = $file->getClientOriginalExtension();
 
         $path = $file->store('files');
+        //return $path;
 
         if ($uploadedFile) {
             Storage::delete($uploadedFile->path);
@@ -66,6 +67,7 @@ class Controller extends BaseController
                 'path' => $path,
                 'format' => $extension,
             ]);
+
             return $uploadedFile;
 
         }

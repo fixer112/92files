@@ -139,7 +139,7 @@ class UserController extends Controller
 
     public function showEditFile(File $file)
     {
-        $this->authorize('create', App\File::class);
+        $this->authorize('delete', $file);
 
         $user = $file->user;
         return view('user.editfile', compact('user'));
@@ -147,7 +147,7 @@ class UserController extends Controller
 
     public function editFile(File $file)
     {
-        $this->authorize('create', App\File::class);
+        $this->authorize('delete', $file);
 
         $validate = [
             'filename' => 'required|string|max:150',
@@ -156,14 +156,13 @@ class UserController extends Controller
         ];
         $this->validate(request(), $validate);
 
-        if (request()->file) {
+        if (request()->has('file')) {
             # code...
-            $file = request()->file;
-
-            $this->uploadFile($file);
-        } else {
-            $file->fill(request()->only(['filename', 'type']))->save();
+            //return request()->file;
+            $file = $this->uploadFile(request()->file, $file);
+            //return $file->path;
         }
+        $file->fill(request()->only(['filename', 'type']))->save();
 
         request()->session()->flash('success', 'File Updated Successfully');
         return back();
