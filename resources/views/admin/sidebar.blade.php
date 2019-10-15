@@ -104,9 +104,26 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link " href="{{url('/bulk_user')}}">
+                    <i class="material-icons">&#xE227;</i>
+                    <span>Add Bulk Users</span>
+                </a>
+            </li>
+
         </ul>
         @endif
-
+        @can('create',App\File::class)
+        <h6 class="main-sidebar__nav-title">Files</h6>
+        <ul class="nav nav--no-borders flex-column">
+            <li class="nav-item">
+                <a class="nav-link " href="{{url('/bulk_file')}}">
+                    <i class="material-icons">&#xE417;</i>
+                    <span>Add Bulk Files</span>
+                </a>
+            </li>
+        </ul>
+        @endcan
         <h6 class="main-sidebar__nav-title">Other Pages</h6>
         <ul class="nav nav--no-borders flex-column">
             <li class="nav-item">

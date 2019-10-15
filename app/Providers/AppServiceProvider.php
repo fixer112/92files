@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -36,14 +37,14 @@ Blade::directive('number', function ($number) {
 return "<?php echo number_format($number);?>";
 });
 
-$states = ["Abia", "Adamawa", "Anambra", "Akwa Ibom", "Bauchi",
-"Bayelsa", "Benue", "Borno", "Cross River", "Delta", "Ebonyi",
-"Enugu", "Edo", "Ekiti", "FCT - Abuja", "Gombe", "Imo",
-"Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi",
-"Kogi", "Kwara", "Lagos", "Nasarawa", "Niger",
-"Ogun", "Ondo", "Osun", "Oyo", "Plateau",
-"Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara",
-];
+$controller = new Controller;
+$settings = $controller->getSettings();
+
+$defaultFolders = $settings['defaultFolders'];
+
+$states = $settings['states'];
+
+View::share('defaultFolders', $defaultFolders);
 View::share('states', $states);
 }
 }

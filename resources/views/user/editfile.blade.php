@@ -33,17 +33,23 @@
                                         <label for="folder_location">Folder Location</label>
                                         <select class="custom-select @error('type') is-invalid @enderror" name="type"
                                             required>
+                                            @foreach ($defaultFolders as $f)
+                                            <option {{request()->file->type == $f ? 'selected':''}} value="{{$f}}">
+                                                {{ucfirst($f)}}</option>
+                                            @endforeach
 
-                                            <option {{request()->file->type == 'education' ? 'selected' : ''}}
-                                                value="education">Education</option>
-                                            <option {{request()->file->type == 'health' ? 'selected' : ''}}
-                                                value="health">
-                                                Health</option>
-                                            <option {{request()->file->type == 'others' ? 'selected' : ''}}
-                                                value="others">
-                                                Others</option>
                                         </select>
                                         @error('type')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="">Company UC</label>
+                                        <input type="text" class="form-control @error('uc') is-invalid @enderror"
+                                            name="uc" value="{{request()->file->company->uc}}" />
+                                        @error('uc')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

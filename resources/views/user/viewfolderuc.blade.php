@@ -47,6 +47,7 @@
                                 <th>Id</th>
                                 <th>Filename</th>
                                 <th>File Format</th>
+                                <th>Company</th>
                                 <th>Date Created</th>
                                 <th>Date Modified</th>
                                 <th>Actions</th>
@@ -63,6 +64,9 @@
                                 </td>
                                 <td>
                                     {{$file->format}}
+                                </td>
+                                <td>
+                                    <a href="/company/{{$file->company->id}}">{{$file->company->name}}</a>
                                 </td>
                                 <td>
                                     {{$file->created_at}}

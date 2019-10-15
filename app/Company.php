@@ -8,6 +8,19 @@ class Company extends Model
 {
     //
     protected $guarded = [];
+    // protected $dateFormat = 'd-m-Y';
+
+    protected $casts = [
+
+        'updated_at' => 'datetime:m-d-Y',
+        'created_at' => 'datetime:m-d-Y',
+    ];
+
+    public function files()
+    {
+        return $this->hasMany('App\File');
+
+    }
 
     public function admin()
     {

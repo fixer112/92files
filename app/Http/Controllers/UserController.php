@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Company;
 use App\File;
+//use Illuminate\Auth\Access\Gate;
 use App\Folder;
 use App\User;
-//use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -53,16 +54,19 @@ class UserController extends Controller
                 </button>@endcan</div>')->addColumn('custom_folders', function (File $file) {
                 $allFolders = Folder::all();
                 $boxes = '';
-
                 foreach ($allFolders as $folder) {
-                    $f = $file->folders()->where('id', $folder->id)->first();
+                    $f = $file->folders()->get()->where('id', $folder->id)->first();
                     $check = $f ? 'checked' : '';
 
                     $boxes .= '<label>' . $folder->foldername . '</label><input id="folder-check" class="mr-1 folder-check" type="checkbox" onclick="checkFolder(' . $file->id . ',' . $folder->id . ')" ' . $check . '/>';
                 }
 
                 return $boxes;
-            }, 1)->rawColumns(['action', 'custom_folders'])->toJson();
+            }, 1)->addColumn('company', function (File $file) {
+                $company = $file->company;
+
+                return $company ? '<a href="/company/' . $company->id . '">' . $company->name . '</a>' : "";
+            })->rawColumns(['action', 'custom_folders', 'company'])->toJson();
 
         }
 
@@ -86,14 +90,17 @@ class UserController extends Controller
                 $boxes = '';
 
                 foreach ($allFolders as $folder) {
-                    $f = $file->folders()->where('id', $folder->id)->first();
+                    $f = $file->folders()->get()->where('id', $folder->id)->first();
                     $check = $f ? 'checked' : '';
 
                     $boxes .= '<label>' . $folder->foldername . '</label><input id="folder-check" class="mr-1 folder-check" type="checkbox" onclick="checkFolder(' . $file->id . ',' . $folder->id . ')" ' . $check . '/>';
                 }
 
                 return $boxes;
-            }, 1)->rawColumns(['action', 'custom_folders'])->toJson();
+            }, 1)->addColumn('company', function (File $file) {
+                $company = $file->company;
+                return $company ? '<a href="/company/' . $company->id . '">' . $company->name . '</a>' : "";
+            })->rawColumns(['action', 'custom_folders', 'company'])->toJson();
 
         }
         $user = $folder->user;
@@ -120,19 +127,48 @@ class UserController extends Controller
         $this->authorize('create', File::class);
 
         $validate = [
-            'filename' => 'required|string|max:150',
+            //'filename' => 'required|string|max:150',
             'type' => 'required|in:education,health,others',
             'user_id' => 'required|integer',
             'admin_id' => 'required|integer',
-            'file' => 'required|max:1024',
+            'files' => 'required',
+            'files.*' => 'mimes:doc,pdf,docx,jpg,jpeg,png,gif|max:1024',
+            'uc' => 'nullable|string|exists:companies',
         ];
+
         $this->validate(request(), $validate);
 
-        $file = request()->file;
+        $files = request()->file('files');
+        //return request()->all();
+        $company = null;
+        if (request()->uc) {
+            $company = Company::where('uc', request()->uc)->first();
 
-        $this->uploadFile($file);
+        }
+        //return var_dump($files);
 
-        request()->session()->flash('success', 'File Created Successfully');
+        foreach ($files as $file) {
+
+            $name = $file->getClientOriginalName();
+            $name = pathinfo($name, PATHINFO_FILENAME);
+
+            request()->merge(['filename' => $name]);
+            //return request()->all();
+            $file = $this->uploadFile($file);
+            if ($company) {
+                $file->update(['company_id' => $company->id]);
+            }
+
+        }
+        $user = $file->user;
+        $summary = "{$Auth::user()->username} added {count($files) files for user <a href='/user/{$user->id}'> {$user->username}</a>}";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
+        request()->session()->flash('success', count($files) . ' Files Created Successfully');
         return back();
 
     }
@@ -140,6 +176,7 @@ class UserController extends Controller
     public function showEditFile(File $file)
     {
         $this->authorize('delete', $file);
+        //return request()->file->company;
 
         $user = $file->user;
         return view('user.editfile', compact('user'));
@@ -148,23 +185,40 @@ class UserController extends Controller
     public function editFile(File $file)
     {
         $this->authorize('delete', $file);
+        //return request()->files;
 
         $validate = [
             'filename' => 'required|string|max:150',
             'type' => 'required|in:education,health,others',
-            'file' => 'max:1024',
+            'file' => 'mimes:doc,pdf,docx,jpg,jpeg,png,gif|max:1024',
+            'uc' => 'nullable|string|exists:companies',
         ];
+
         $this->validate(request(), $validate);
 
         if (request()->has('file')) {
-            # code...
-            //return request()->file;
+
             $file = $this->uploadFile(request()->file, $file);
+            $file->fill(request()->only(['filename', 'type']))->save();
+            if (request()->uc) {
+                $company = Company::where('uc', request()->uc)->first();
+                $file->update(['company_id' => $company->id]);
+
+            }
+
             //return $file->path;
         }
-        $file->fill(request()->only(['filename', 'type']))->save();
 
-        request()->session()->flash('success', 'File Updated Successfully');
+        $user = $file->user;
+        $summary = "{$Auth::user()->username} edited file {$file->id} for user <a href='/user/{$user->id}'> {$user->username}</a>}";
+
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
+        request()->session()->flash('success', ' File Updated Successfully');
         return back();
 
     }
@@ -175,6 +229,16 @@ class UserController extends Controller
         Storage::delete($file->path);
 
         $file->delete();
+
+        $user = $file->user;
+        $summary = "{$Auth::user()->username} deleted file {$file->id} for user <a href='/user/{$user->id}'> {$user->username}</a>}";
+
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
         request()->session()->flash('success', 'File deleted Successfully');
         return back();
 
@@ -196,12 +260,19 @@ class UserController extends Controller
         ];
 
         $this->validate(request(), $validate);
-
+        request()->merge(['uc' => Str::random(15)]);
         $folder = new Folder;
-        $folder->fill(\request()->only(['foldername', 'user_id', 'admin_id']))->save();
-        $folder->update(['uc' => Str::random(15)]);
+        $folder->fill(\request()->only(['foldername', 'user_id', 'admin_id', 'uc']))->save();
+        //$folder->update(['uc' => Str::random(15)]);
+        $summary = "{$Auth::user()->username} added folder {$folder->uc}";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
         request()->session()->flash('success', 'Folder Created Successfully');
-        return back();
+        return redirect('/user/' . $user->id);
 
     }
 
@@ -223,6 +294,14 @@ class UserController extends Controller
         $this->validate(request(), $validate);
 
         $folder->fill(\request()->only(['foldername']))->save();
+
+        $summary = "{$Auth::user()->username} edited folder {$folder->uc}";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
         request()->session()->flash('success', 'Folder Updated Successfully');
         return back();
 
@@ -235,6 +314,14 @@ class UserController extends Controller
         //return $user;
 
         $folder->delete();
+
+        $summary = "{$Auth::user()->username} deleted folder {$folder->uc}";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
         request()->session()->flash('success', 'Folder Deleted Successfully');
         return redirect('/user/' . $user->id);
 
@@ -256,23 +343,31 @@ class UserController extends Controller
 
         }
 
+        $summary = "{$Auth::user()->username} File {$type} Folder ({$folder->foldername})";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
         return $this->jsonWebBack(request(), 'success', 'File ' . $type . ' Folder (' . $folder->foldername . ') Successfully');
 
     }
-    public function downloadFileUc(Folder $folder, File $file)
+    public function switchStatus(User $user)
     {
-        $check = $folder->files->where('id', $file->id)->first();
+        $this->authorize('update', $user);
+        $user->update(['active' => !$user->active]);
+        $status = $user->active ? 'Activated' : 'Suspended';
 
-        if (!$check) {
-            abort('404');
-        }
+        $summary = "{$Auth::user()->username} {$status} User <a href='/user/{$user->id}'> {$user->username}</a>";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
 
-        return response()->file(\storage_path('/app/public/' . $file->path));
+        ]);
+
+        return \redirect('/user/' . $user->id);
+
     }
-    public function downloadFile(File $file)
-    {
-        $this->authorize('update', $file);
 
-        return response()->file(\storage_path('/app/public/' . $file->path));
-    }
 }

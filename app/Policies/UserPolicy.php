@@ -50,6 +50,11 @@ class UserPolicy
         return $user->type == 'user';
     }
 
+    public function manageAdmin(User $user)
+    {
+        return false;
+    }
+
     /**
      * Determine whether the user can update the model.
      *
@@ -72,8 +77,8 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        return $model->role == 'user' && $user->type == 'user';
-
+        //return $model->role == 'user' && $user->type == 'user';
+        return false;
         //return !$model->isSuperAdmin() $user->type == 'user';
     }
 

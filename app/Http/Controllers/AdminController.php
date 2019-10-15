@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Activity;
 use App\Company;
+use App\File;
+use App\Imports\UsersImport;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\MountManager;
 
 class AdminController extends Controller
 {
@@ -32,14 +37,15 @@ class AdminController extends Controller
     #ADMIN
     public function showAddAdmin()
     {
-        $this->authorize('create', User::class);
+        $this->authorize('manageAdmin', User::class);
 
         return view('admin.admin.addadmin');
     }
 
     public function addAdmin()
     {
-        $this->authorize('create', User::class);
+
+        $this->authorize('manageAdmin', User::class);
 
         $validate = [
             'username' => 'required|string|max:15|unique:users',
@@ -66,7 +72,12 @@ class AdminController extends Controller
             $this->uploadPic($user);
 
         }
+        $summary = "{$Auth::user()->username} created Admin {$user->username}";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
 
+        ]);
         request()->session()->flash('success', 'Admin created successfully');
         //return request()->all();
         return redirect('/admin');
@@ -74,7 +85,8 @@ class AdminController extends Controller
     }
     public function showViewAdmin()
     {
-        $this->authorize('viewAny', User::class);
+        $this->authorize('manageAdmin', User::class);
+
         if (request()->wantsJson()) {
 
             return datatables()->of(User::where('role', 'admin'))->addColumn('action', '<div class="btn-group btn-group-sm d-flex justify-content-end" role="group" aria-label="Table row actions"><a href="/edit_admin/{{$id}}" type="button" class="btn btn-warning">
@@ -107,13 +119,15 @@ class AdminController extends Controller
 
     public function showEditAdmin(User $user)
     {
-        $this->authorize('update', $user);
+        $this->authorize('manageAdmin', User::class);
+
         return view('admin.admin.editadmin');
 
     }
     public function editAdmin(User $user)
     {
-        $this->authorize('update', $user);
+        $this->authorize('manageAdmin', User::class);
+
         if (!$user->isAdmin()) {
             request()->session()->flash('error', 'User is not an Admin');
             return back();
@@ -154,6 +168,13 @@ class AdminController extends Controller
             $this->uploadPic($user);
 
         }
+
+        $summary = "{$Auth::user()->username} edited Admin {$user->username}";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
 
         request()->session()->flash('success', 'Admin updated successfully');
         return back();
@@ -197,6 +218,12 @@ class AdminController extends Controller
             $this->uploadPic($user);
 
         }
+        $summary = "{$Auth::user()->username} created User <a href='/user/{$user->id}'> {$user->username}</a>";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
 
         request()->session()->flash('success', 'User created successfully');
         //return request()->all();
@@ -212,9 +239,9 @@ class AdminController extends Controller
                         <i class="material-icons">visibility</i>
                       </a></button> <button class="btn btn-warning"><a href="/edit_user/{{$id}}">
                         <i class="material-icons">&#xE3C9;</i>
-                      </a></button> <button type="button" class="btn btn-danger" onclick= "del(' . '{{$id}}' . ')">
+                      </a></button> @can("create", App\File::find($id))<button type="button" class="btn btn-danger" onclick= "del(' . '{{$id}}' . ')">
                         <i class="material-icons">&#xE872;</i>
-                      </button></div>')->addColumn('photo', function (User $user) {
+                   </button>@endcan</div>')->addColumn('photo', function (User $user) {
 
                 return '<img width="50px" class="rounded-circle mr-2" src="/' . $user->photo() . '" alt="User Avatar">';
             }, 1)->rawColumns(['action', 'photo'])->toJson();
@@ -228,7 +255,28 @@ class AdminController extends Controller
         $this->authorize('delete', $user);
 
         Storage::delete($user->pic);
+        foreach ($user->files as $file) {
+            Storage::delete($file->path);
+            $files->delete();
+
+        }
+        /* foreach ($user->folders as $folder) {
+        Storage::delete($f->path);
+        $files->delete();
+
+        } */
+
+        //$files->delete();
+        $user->folders->delete();
         $user->delete();
+
+        $summary = "{$Auth::user()->username} deleted User <a href='/user/{$user->id}'> {$user->username}</a>";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
         request()->session()->flash('success', $user->role . ' deleted successfully');
         return back();
 
@@ -261,6 +309,7 @@ class AdminController extends Controller
 
         $this->validate(request(), $validate);
 
+        request()->merge(['uc' => Str::random(10)]);
         $company = new Company();
         $company->fill(\request()->except(['logo']))->save();
 
@@ -269,6 +318,12 @@ class AdminController extends Controller
             $this->uploadCompanyLogo($company);
 
         }
+        $summary = "{$Auth::user()->username} created Company <a href='/company/{$company->id}'> {$company->name}</a>";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
 
         request()->session()->flash('success', 'Organization created successfully');
         //return request()->all();
@@ -309,6 +364,13 @@ class AdminController extends Controller
 
         Storage::delete($user->pic);
         $user->delete();
+        $summary = "{$Auth::user()->username} deleted Company <a href='/company/{$company->id}'> {$company->name}</a>";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
         request()->session()->flash('success', 'Admin deleted successfully');
         return back();
 
@@ -353,9 +415,156 @@ class AdminController extends Controller
 
         }
 
+        $summary = "{$Auth::user()->username} edited Company <a href='/company/{$company->id}'> {$company->name}</a>";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
         request()->session()->flash('success', 'Organization updated successfully');
         return back();
 
+    }
+    public function showImportUsers()
+    {
+        $this->authorize('create', User::class);
+
+        return view('admin.user.bulkuser');
+    }
+    public function importUsers()
+    {
+        $this->authorize('create', User::class);
+
+        $validate = [
+            'file' => 'required|mimetypes:application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+
+        ];
+
+        // try {
+        $import = new UsersImport;
+        $import->import(request()->file('file'));
+        //} catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+        $failures = $import->failures();
+        $errors = '<center><h4>Error occured during user upload</h4><h6>The following affected rows was not uploaded </h6></center>';
+        if (count($failures) > 0) {
+            foreach ($failures as $failure) {
+                $errors .= '<p>' . \implode(',', $failure->errors()) . ' at row ' . $failure->row() . ' where username is ' . $failure->values()['username'] . '</p>';
+            }
+            //return dd($failures);
+            //$failure = $failures[0];
+            //return $errors;
+            request()->session()->put('fail', $errors);
+            return redirect('/errors');
+        }
+
+        /* foreach ($failures as $failure) {
+        $failure->row(); // row that went wrong
+        $failure->attribute(); // either heading key (if using heading row concern) or column index
+        $failure->errors(); // Actual error messages from Laravel validator
+        $failure->values(); // The values of the row that has failed.
+        $errors .= 'Error Row ' . $failure->row() . ' /n';
+        return $errors;
+        } */
+        //}
+        /* catch (\Illuminate\Database\QueryException $e) {
+
+        return dd($e);
+        request()->session()->flash('error', $e->getMessage());
+
+        return back();
+
+        } */
+        $summary = "{$Auth::user()->username} Imported bulk users";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
+        request()->session()->flash('success', 'All Users Uploaded');
+
+        return back();
+
+    }
+
+    public function importFiles()
+    {
+        $files = Storage::disk('local')->files('files');
+        //return dd($files);
+        $error = 0;
+        foreach ($files as $filepath) {
+            //$file = Storage::disk('local')->get($filepath);
+            //return dd($file);
+            $filename = basename($filepath);
+            $info = \pathinfo($filename);
+            $ext = $info['extension'];
+            $name = $info['filename'];
+            $slash = explode('-', $name, 4);
+            $newpath = 'files/' . Str::random(25) . '.' . $ext;
+            //echo $newpath . '<br>';
+
+            //echo json_encode($slash) . '<br>';
+
+            if (count($slash) < 4) {
+                $error++;
+                continue;
+            }
+            $username = $slash[0];
+            $type = $slash[1];
+            $uc = $slash[2];
+
+            $user = User::where('username', $username)->first();
+
+            if (!$user || $user->isAdmin()) {
+                $error++;
+                continue;
+            }
+
+            if (!in_array($type, $this->getSettings()['defaultFolders'])) {
+                $error++;
+                continue;
+            }
+
+            $company = Company::where('uc', $uc)->first();
+
+            if (!$company) {
+                $error++;
+                continue;
+            }
+
+            $mount = new MountManager([
+                'default' => Storage::getDriver(),
+                'local' => Storage::disk('local')->getDriver(),
+            ]);
+
+            File::create([
+                'filename' => str::random(10),
+                'type' => $type,
+                'user_id' => $user->id,
+                'admin_id' => Auth::id(),
+                'path' => $newpath,
+                'format' => $ext,
+                'company_id' => $company->id,
+            ]);
+
+            $mount->copy('local://' . $filepath, 'default://' . $newpath);
+
+            Storage::disk('local')->delete($filepath);
+            //echo json_encode($slash) . '<br>';
+
+        }
+        $summary = "{$Auth::user()->username} Imported bulk files";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
+        $message = $error > 0 ? 'Some files are not uploaded' : 'All files are uploaded';
+        request()->session()->flash('success', $message);
+
+        return redirect('/admin');
     }
 
 }

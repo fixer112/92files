@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\File;
+use App\Folder;
 use App\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -55,7 +56,7 @@ class Controller extends BaseController
     }
     public function uploadFile($file, File $uploadedFile = null)
     {
-
+        //$file = $re
         $extension = $file->getClientOriginalExtension();
 
         $path = $file->store('files');
@@ -73,7 +74,7 @@ class Controller extends BaseController
         }
 
         $newFile = new File;
-        $newFile->fill(\request()->only(['filename', 'type', 'user_id', 'admin_id']))->save();
+        $newFile->fill(request()->only(['filename', 'type', 'user_id', 'admin_id']))->save();
         $newFile->update([
             'path' => $path,
             'format' => $extension,
@@ -93,6 +94,38 @@ class Controller extends BaseController
         }
         request()->session()->flash($type, $message);
         return back();
+    }
+
+    public function downloadFileUc(Folder $folder, File $file)
+    {
+        $check = $folder->files->where('id', $file->id)->first();
+
+        if (!$check) {
+            abort('404');
+        }
+
+        return response()->file(\storage_path('/app/public/' . $file->path));
+    }
+    public function downloadFile(File $file)
+    {
+        $this->authorize('update', $file);
+
+        return response()->file(\storage_path('/app/public/' . $file->path));
+    }
+
+    public function getSettings()
+    {
+        return [
+            'defaultFolders' => ['education', 'health', 'others'],
+            'states' => ["Abia", "Adamawa", "Anambra", "Akwa Ibom", "Bauchi",
+                "Bayelsa", "Benue", "Borno", "Cross River", "Delta", "Ebonyi",
+                "Enugu", "Edo", "Ekiti", "FCT - Abuja", "Gombe", "Imo",
+                "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi",
+                "Kogi", "Kwara", "Lagos", "Nasarawa", "Niger",
+                "Ogun", "Ondo", "Osun", "Oyo", "Plateau",
+                "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara",
+            ],
+        ];
     }
 
 }

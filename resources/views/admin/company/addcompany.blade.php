@@ -112,9 +112,9 @@
                                     <select name="type" class="custom-select @error('type') is-invalid @enderror"
                                         required>
                                         <option selected="" disabled>--| Choose Option |--</option>
-                                        <option value="education">Education</option>
-                                        <option value="health">Health</option>
-                                        <option value="others">Others</option>
+                                        @foreach ($defaultFolders as $f)
+                                        <option value="{{$f}}">{{ucfirst($f)}}</option>
+                                        @endforeach
                                     </select>
                                     @error('type')
                                     <span class="invalid-feedback" role="alert">

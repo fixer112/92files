@@ -1,4 +1,7 @@
 <?php
+
+use App\File;
+use App\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -9,6 +12,23 @@
 | contains the "web" middleware group. Now create something great!
 |
  */
+
+Route::get('/admin/{user}', function (User $user) {
+    return $user->adminFiles;
+});
+
+Route::get('/filecompany/{file}', function (File $file) {
+    //return "{$file->id}";
+    return $file->admin;
+});
+Route::get('/errors', function () {
+    if (session('fail')) {
+        //request()->session()->remove('errors');
+
+        return view('errors');
+    }
+    return redirect(Auth::user()->routeRole());
+})->middleware('auth');
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,8 +71,8 @@ Route::post('/user/{user}/add_file/', 'UserController@addFile');
 Route::post('/edit_file/{file}', 'UserController@editFile');
 Route::get('/edit_file/{file}', 'UserController@showEditFile');
 Route::post('/delete_file/{file}', 'UserController@deleteFile');
-Route::get('/file/{file}', 'UserController@downloadFile');
-Route::get('/file/{folder}/{file}', 'UserController@downloadFileUc');
+Route::get('/file/{file}', 'Controller@downloadFile');
+Route::get('/file/{folder}/{file}', 'Controller@downloadFileUc');
 
 Route::post('/user/{user}/add_folder/', 'UserController@addFolder');
 Route::get('/user/{user}/add_folder/', 'UserController@showAddFolder');
@@ -65,6 +85,11 @@ Route::get('custom_folder/{folder}', 'UserController@showCustomFolder');
 Route::get('uc/{uc}', 'UserController@showFolderUc');
 
 Route::post('/file/{file}/folder/{folder}', 'UserController@checkFolder');
+Route::get('/switch_status/{user}', 'UserController@switchStatus');
+Route::get('/bulk_user', 'AdminController@showImportUsers');
+Route::post('/bulk_user', 'AdminController@importUsers');
+//Route::get('/bulk_file', 'AdminController@showImportFiles');
+Route::get('/bulk_file', 'AdminController@importFiles');
 
 //Route::get('/home', 'HomeController@index')->name('home');
 

@@ -55,7 +55,7 @@ class FilePolicy
      */
     public function update(User $user, File $file)
     {
-        return $user->id == $file->user_id || $user->type == 'user';
+        return ($user->id == $file->user_id || $user->type == 'user') && $file->user->active;
 
     }
 

@@ -19,6 +19,7 @@
             <th>Id</th>
             <th>Filename</th>
             <th>File Format</th>
+            <th>Company</th>
             <th>Custom Folders</th>
             <th>Date Created</th>
             <th>Date Modified</th>
@@ -42,56 +43,64 @@
                     <div class="form-row mx-4">
                         <div class="col-lg-12">
                             <div class="form-row">
-                                <div class="form-group col-md-12">
+                                {{-- <div class="form-group col-md-12">
                                     <label for="file_name">Name of File</label>
                                     <input type="text" class="form-control @error('filename') is-invalid @enderror"
                                         id="file_name" value="{{ old('filename') }}" name="filename"
-                                        placeholder="Name of File" required>
-                                    @error('filename')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label for="folder_location">Folder Location</label>
-                                    <select class="custom-select @error('type') is-invalid @enderror" name="type"
-                                        required>
-                                        <option selected="">--| Choose Option |--</option>
-                                        <option value="education">Education</option>
-                                        <option value="health">Health</option>
-                                        <option value="others">Others</option>
-                                    </select>
-                                    @error('type')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label for="file_name">Upload File</label>
-                                    <div class="custom-file w-100">
-                                        <input type="file" class="custom-file-input @error('file') is-invalid @enderror"
-                                            id="customFile" name="file" required>
-                                        <label class="custom-file-label" for="customFile">Choose
-                                            file...</label></div>
-                                    @error('file')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                <input name="user_id" value="{{request()->user->id}}" hidden>
-                                <input name="admin_id" value="{{Auth::id()}}" hidden>
+                                placeholder="Name of File" required>
+                                @error('filename')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div> --}}
+                            <div class="form-group col-md-12">
+                                <label for="folder_location">Folder Location</label>
+                                <select class="custom-select @error('type') is-invalid @enderror" name="type" required>
+                                    <option selected="">--| Choose Option |--</option>
+                                    @foreach ($defaultFolders as $f)
+                                    <option value="{{$f}}">{{ucfirst($f)}}</option>
+                                    @endforeach
+                                </select>
+                                @error('type')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
+                            <div class="form-group col-md-12">
+                                <label for="">Company UC</label>
+                                <input type="text" class="form-control @error('uc') is-invalid @enderror" name="uc" />
+                                @error('uc')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="file_name">Upload File</label>
+                                <div class="custom-file w-100">
+                                    <input type="file" class="custom-file-input @error('files') is-invalid @enderror"
+                                        id="customFile" name="files[]" required multiple>
+                                    <label class="custom-file-label" for="customFile">Choose
+                                        file...</label></div>
+                                @error('files.*')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <input name="user_id" value="{{request()->user->id}}" hidden>
+                            <input name="admin_id" value="{{Auth::id()}}" hidden>
                         </div>
                     </div>
-                    <button class="btn btn-md btn-accent ml-auto d-table mr-3">Add File</button>
-                </form>
             </div>
+            <button class="btn btn-md btn-accent ml-auto d-table mr-3">Add File</button>
+            </form>
         </div>
-        <!-- End Edit User Details Card -->
     </div>
+    <!-- End Edit User Details Card -->
+</div>
 </div>
 @endcan
 @endsection
@@ -104,6 +113,7 @@
 { data: 'id'},
 { data: 'filename'},
 { data: 'format'},
+{ data: 'company'},
 { data: 'custom_folders'},
 { data: 'created_at'},
 { data: 'updated_at'},

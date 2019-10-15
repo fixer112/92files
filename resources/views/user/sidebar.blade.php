@@ -70,9 +70,17 @@
             </li>
         </ul>
         @endcan
-
+        <div class="mt-3">
+            {{Auth::user()->isAdmin() ? 'User is ': 'You are '}} {{$user->active ? 'Active': 'Suspended'}} and
+            {{date('Y') - $user->dob->format('Y') >= 18 ? 'above 18 years': 'below 18 years'}}
+        </div>
         @if(Auth::user()->isAdmin())
-        <a href="{{url('/admin')}}"><button class="btn btn-pill btn-primary mx-4 mt-3">Go to Admin</button></a>
+
+        <div class="row">
+            <a href="{{url('/switch_status/'.$user->id)}}"><button
+                    class="btn btn-pill {{$user->active ? 'btn-danger' : 'btn-primary'}} mx-auto mt-3">{{$user->active ? 'Suspend User' :'Activate User'}}</button></a>
+            <a href="{{url('/admin')}}"><button class="btn btn-pill btn-primary mx-auto mt-3">Go to Admin</button></a>
+        </div>
         @endif
 
     </div>

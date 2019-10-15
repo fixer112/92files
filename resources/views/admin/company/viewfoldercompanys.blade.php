@@ -8,6 +8,7 @@
             {{-- <th style="width: 10px;" class="hide-sort-icons"></th> --}}
             <th>photo</th>
             <th>Id</th>
+            <th>Unique Code</th>
             <th>Name</th>
             <th>Email</th>
             <th>Number</th>
@@ -29,6 +30,7 @@
     var col = [
 { data: 'photo'},
 { data: 'id'},
+{ data: 'uc'},
 { data: 'name'},
 { data: 'email'},
 { data: 'num'},

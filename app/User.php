@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -18,6 +19,8 @@ class User extends Authenticatable
     'name', 'email', 'password',
     ]; */
     protected $guarded = [];
+
+    //protected $dateFormat = 'd/m/Y';
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -34,6 +37,9 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'dob' => 'datetime:m-d-Y',
+        'updated_at' => 'datetime:m-d-Y',
+        'created_at' => 'datetime:m-d-Y',
     ];
 
     public function files()
@@ -42,9 +48,32 @@ class User extends Authenticatable
 
     }
 
+    public function activities()
+    {
+        return $this->hasMany('App\Activity');
+
+    }
+
+    public function adminFiles()
+    {
+        return $this->hasMany('App\File', 'admin_id');
+
+    }
+
     public function folders()
     {
         return $this->hasMany('App\Folder');
+
+    }
+
+    public function adminFolders()
+    {
+        return $this->hasMany('App\Folder', 'admin_id');
+
+    }
+    public function adminCompanies()
+    {
+        return $this->hasMany('App\Company', 'admin_id');
 
     }
     public function isAdmin()
@@ -61,7 +90,7 @@ class User extends Authenticatable
     }
     public function photo()
     {
-        return $this->pic ? 'storage/' . $this->pic : 'assets\app\images\avatars\0.jpeg';
+        return $this->pic ? Storage::url($this->pic) /* '/storage/' . $this->pic */ : '\assets\app\images\avatars\0.jpeg';
     }
     public function setPasswordAttribute($password)
     {

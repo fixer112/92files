@@ -20,6 +20,7 @@ class CreateFilesTable extends Migration
             $table->string('type');
             $table->string('format')->nullable();
             $table->string('user_id');
+            $table->string('company_id')->nullable();
             $table->string('admin_id');
             // $table->string('folder_id')->nullable();
             $table->timestamps();

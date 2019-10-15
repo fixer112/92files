@@ -9,7 +9,7 @@
     <div class="col mb-5">
         @can('delete', App\Folder::find(request()->folder->id))
         <button class="btn btn-sm btn-danger text-white" style="float: left;"><i class="material-icons">edit</i>
-            <a href="{{url('/edit_folder/'.request()->folder->id)}}">Edit Folder</button>
+            <a href="{{url('/edit_folder/'.request()->folder->id)}}"></a> Folder</button>
         <button onclick="delFolder()" class="btn btn-sm btn-danger text-white" style="float: right;"><i
                 class="material-icons">delete</i>
             Delete Folder</button>
@@ -31,6 +31,7 @@
                 <th>Id</th>
                 <th>Filename</th>
                 <th>File Format</th>
+                <th>Company</th>
                 <th>Custom Folders</th>
                 <th>Date Created</th>
                 <th>Date Modified</th>
@@ -70,11 +71,22 @@
                                         <select class="custom-select @error('type') is-invalid @enderror" name="type"
                                             required>
                                             <option selected="">--| Choose Option |--</option>
-                                            <option value="education">Education</option>
-                                            <option value="health">Health</option>
-                                            <option value="others">Others</option>
+                                            @foreach ($defaultFolders as $f)
+                                            <option value="{{$f}}">
+                                                {{ucfirst($f)}}</option>
+                                            @endforeach
                                         </select>
                                         @error('type')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="">Company UC</label>
+                                        <input type="text" class="form-control @error('uc') is-invalid @enderror"
+                                            name="uc" />
+                                        @error('uc')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -120,6 +132,7 @@
 { data: 'id'},
 { data: 'filename'},
 { data: 'format'},
+{ data: 'company'},
 { data: 'custom_folders'},
 { data: 'created_at'},
 { data: 'updated_at'},
@@ -147,7 +160,7 @@ function del(id){
 };
 function delFolder(){
 var myhtml = document.createElement("div");
-var del = '<form action="/delete_folder/'+{{request()->folder->id}}+'" method="POST">@csrf<button type="submit" class="btn btn-danger"><i class="material-icons">&#xE872;</i> Delete File</button>';
+var del = '<form action="/delete_folder/'+{{request()->folder->id}}+'" method="POST">@csrf<button type="submit" class="btn btn-danger"><i class="material-icons">&#xE872;</i> Delete Folder</button>';
 
     myhtml.innerHTML = del;
     swal({

@@ -42,7 +42,7 @@ class FolderPolicy
      */
     public function create(User $user)
     {
-        return $user->role == 'user';
+        return $user->role == 'user' && $user->active;
     }
 
     /**
@@ -54,7 +54,7 @@ class FolderPolicy
      */
     public function update(User $user, Folder $folder)
     {
-        return $user->id == $folder->user_id;
+        return $user->id == $folder->user_id && $folder->user->active;
 
     }
 
@@ -67,7 +67,7 @@ class FolderPolicy
      */
     public function delete(User $user, Folder $folder)
     {
-        return $user->id == $folder->user_id;
+        return $user->id == $folder->user_id && $folder->user->active;
 
     }
 

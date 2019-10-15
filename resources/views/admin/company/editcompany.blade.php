@@ -113,12 +113,11 @@
                                     <label for="type">Type of Document</label>
                                     <select name="type" class="custom-select @error('type') is-invalid @enderror"
                                         required>
-                                        <option {{request()->company->type == 'education' ? 'selected':''}}
-                                            value="education">Education</option>
-                                        <option {{request()->company->type == 'health' ? 'selected':''}} value="health">
-                                            Health</option>
-                                        <option {{request()->company->type == 'others' ? 'selected':''}} value="others">
-                                            Others</option>
+                                        @foreach ($defaultFolders as $f)
+                                        <option {{request()->company->type == $f ? 'selected':''}} value="{{$f}}">
+                                            {{ucfirst($f)}}</option>
+                                        @endforeach
+
                                     </select>
                                     @error('type')
                                     <span class="invalid-feedback" role="alert">
