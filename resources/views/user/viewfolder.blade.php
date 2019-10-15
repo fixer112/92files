@@ -19,6 +19,7 @@
             <th>Id</th>
             <th>Filename</th>
             <th>File Format</th>
+            <th>UC</th>
             <th>Company</th>
             <th>Custom Folders</th>
             <th>Date Created</th>
@@ -113,6 +114,7 @@
 { data: 'id'},
 { data: 'filename'},
 { data: 'format'},
+{ data: 'uc'},
 { data: 'company'},
 { data: 'custom_folders'},
 { data: 'created_at'},

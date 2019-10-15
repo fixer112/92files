@@ -47,6 +47,7 @@
                                 <th>Id</th>
                                 <th>Filename</th>
                                 <th>File Format</th>
+                                <th>UC</th>
                                 <th>Company</th>
                                 <th>Date Created</th>
                                 <th>Date Modified</th>
@@ -61,6 +62,9 @@
                                 </td>
                                 <td>
                                     {{$file->filename}}
+                                </td>
+                                <td>
+                                    {{$file->uc}}
                                 </td>
                                 <td>
                                     {{$file->format}}
