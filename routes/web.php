@@ -88,6 +88,9 @@ Route::post('/file/{file}/folder/{folder}', 'UserController@checkFolder');
 Route::get('/switch_status/{user}', 'UserController@switchStatus');
 Route::get('/bulk_user', 'AdminController@showImportUsers');
 Route::post('/bulk_user', 'AdminController@importUsers');
+
+Route::get('/stats', 'AdminController@allStatistics');
+
 //Route::get('/bulk_file', 'AdminController@showImportFiles');
 Route::get('/bulk_file', 'AdminController@importFiles');
 

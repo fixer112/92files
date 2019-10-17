@@ -124,6 +124,17 @@
             </li>
         </ul>
         @endcan
+        <h6 class="main-sidebar__nav-title">Activities</h6>
+        <ul class="nav nav--no-borders flex-column">
+            @can('viewAny',App\Activity::class)
+            <li class="nav-item">
+                <a class="nav-link " href="{{url('/stats')}}">
+                    <i class="material-icons">&#xE417;</i>
+                    <span>All Activities</span>
+                </a>
+            </li>
+            @endcan
+        </ul>
         <h6 class="main-sidebar__nav-title">Other Pages</h6>
         <ul class="nav nav--no-borders flex-column">
             <li class="nav-item">

@@ -7,6 +7,7 @@ use App\Company;
 use App\File;
 use App\Imports\UsersImport;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -565,6 +566,35 @@ class AdminController extends Controller
         request()->session()->flash('success', $message);
 
         return redirect('/admin');
+    }
+
+    public function allStatistics()
+    {
+        $this->authorize('viewAny', Activity::class);
+        $validate = [
+            'from' => 'date',
+            'to' => 'date',
+            'state' => 'string',
+            //'dob' => 'date_format:Y-m-d',
+        ];
+        $this->validate(request(), $validate);
+
+        $from = request()->from ? Carbon::parse(request()->from) : Carbon::now();
+        $to = request()->to ? Carbon::parse(request()->to) : Carbon::now();
+        $selectedState = request()->state ? request()->state : 'All';
+
+        $activities = Activity::whereBetween('created_at', [$from->startOfDay()->toDateTimeString(), $to->endOfDay()->toDateTimeString()]);
+
+        $selectedState != 'All' ? $activities->whereHas('user', function ($query) use ($selectedState) {
+            $query->where('so', $selectedState);
+        }) : '';
+        //('so', $selectedState) : '';
+        //return $activities;
+
+        $activities = $activities->get();
+
+        return view('stats.all', \compact('to', 'from', 'selectedState', 'activities'));
+
     }
 
 }

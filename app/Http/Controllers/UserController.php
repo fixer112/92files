@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Activity;
 use App\Company;
-use App\File;
 //use Illuminate\Auth\Access\Gate;
+use App\File;
 use App\Folder;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -161,7 +163,7 @@ class UserController extends Controller
 
         }
         $user = $file->user;
-        $summary = "{$Auth::user()->username} added {count($files) files for user <a href='/user/{$user->id}'> {$user->username}</a>}";
+        $summary = Auth::user()->username . " added {count($files) files for user <a href='/user/{$user->id}'> {$user->username}</a>}";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -210,7 +212,7 @@ class UserController extends Controller
         }
 
         $user = $file->user;
-        $summary = "{$Auth::user()->username} edited file {$file->id} for user <a href='/user/{$user->id}'> {$user->username}</a>}";
+        $summary = Auth::user()->username . " edited file {$file->id} for user <a href='/user/{$user->id}'> {$user->username}</a>}";
 
         Activity::create([
             'user_id' => Auth::id(),
@@ -231,7 +233,7 @@ class UserController extends Controller
         $file->delete();
 
         $user = $file->user;
-        $summary = "{$Auth::user()->username} deleted file {$file->id} for user <a href='/user/{$user->id}'> {$user->username}</a>}";
+        $summary = Auth::user()->username . " deleted file {$file->id} for user <a href='/user/{$user->id}'> {$user->username}</a>}";
 
         Activity::create([
             'user_id' => Auth::id(),
@@ -264,7 +266,7 @@ class UserController extends Controller
         $folder = new Folder;
         $folder->fill(\request()->only(['foldername', 'user_id', 'admin_id', 'uc']))->save();
         //$folder->update(['uc' => Str::random(15)]);
-        $summary = "{$Auth::user()->username} added folder {$folder->uc}";
+        $summary = Auth::user()->username . " added folder {$folder->uc}";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -295,7 +297,7 @@ class UserController extends Controller
 
         $folder->fill(\request()->only(['foldername']))->save();
 
-        $summary = "{$Auth::user()->username} edited folder {$folder->uc}";
+        $summary = Auth::user()->username . " edited folder {$folder->uc}";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -315,7 +317,7 @@ class UserController extends Controller
 
         $folder->delete();
 
-        $summary = "{$Auth::user()->username} deleted folder {$folder->uc}";
+        $summary = Auth::user()->username . " deleted folder {$folder->uc}";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -343,7 +345,7 @@ class UserController extends Controller
 
         }
 
-        $summary = "{$Auth::user()->username} File {$type} Folder ({$folder->foldername})";
+        $summary = Auth::user()->username . " File {$type} Folder ({$folder->foldername})";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -359,7 +361,7 @@ class UserController extends Controller
         $user->update(['active' => !$user->active]);
         $status = $user->active ? 'Activated' : 'Suspended';
 
-        $summary = "{$Auth::user()->username} {$status} User <a href='/user/{$user->id}'> {$user->username}</a>";
+        $summary = Auth::user()->username . " {$status} User <a href='/user/{$user->id}'> {$user->username}</a>";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,

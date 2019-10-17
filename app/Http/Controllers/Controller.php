@@ -82,6 +82,7 @@ class Controller extends BaseController
 
         return $newFile;
     }
+
     public function test()
     {
         return File::find(1)->folder->first()->id;
