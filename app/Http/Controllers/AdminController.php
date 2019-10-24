@@ -73,7 +73,7 @@ class AdminController extends Controller
             $this->uploadPic($user);
 
         }
-        $summary = "{$Auth::user()->username} created Admin {$user->username}";
+        $summary = Auth::user()->username . "  created Admin {$user->username}";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -170,7 +170,7 @@ class AdminController extends Controller
 
         }
 
-        $summary = "{$Auth::user()->username} edited Admin {$user->username}";
+        $summary = Auth::user()->username . "  edited Admin {$user->username}";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -219,7 +219,7 @@ class AdminController extends Controller
             $this->uploadPic($user);
 
         }
-        $summary = "{$Auth::user()->username} created User <a href='/user/{$user->id}'> {$user->username}</a>";
+        $summary = Auth::user()->username . "  created User <a href='/user/{$user->id}'> {$user->username}</a>";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -271,7 +271,7 @@ class AdminController extends Controller
         $user->folders->delete();
         $user->delete();
 
-        $summary = "{$Auth::user()->username} deleted User <a href='/user/{$user->id}'> {$user->username}</a>";
+        $summary = Auth::user()->username . "  deleted User <a href='/user/{$user->id}'> {$user->username}</a>";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -319,7 +319,7 @@ class AdminController extends Controller
             $this->uploadCompanyLogo($company);
 
         }
-        $summary = "{$Auth::user()->username} created Company <a href='/company/{$company->id}'> {$company->name}</a>";
+        $summary = Auth::user()->username . " created Company <a href='/company/{$company->id}'> {$company->name}</a>";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -365,7 +365,7 @@ class AdminController extends Controller
 
         Storage::delete($user->pic);
         $user->delete();
-        $summary = "{$Auth::user()->username} deleted Company <a href='/company/{$company->id}'> {$company->name}</a>";
+        $summary = Auth::user()->username . " deleted Company <a href='/company/{$company->id}'> {$company->name}</a>";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -416,7 +416,7 @@ class AdminController extends Controller
 
         }
 
-        $summary = "{$Auth::user()->username} edited Company <a href='/company/{$company->id}'> {$company->name}</a>";
+        $summary = Auth::user()->username . " edited Company <a href='/company/{$company->id}'> {$company->name}</a>";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -476,7 +476,7 @@ class AdminController extends Controller
         return back();
 
         } */
-        $summary = "{$Auth::user()->username} Imported bulk users";
+        $summary = Auth::user()->username . "  Imported bulk users";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,
@@ -547,6 +547,7 @@ class AdminController extends Controller
                 'path' => $newpath,
                 'format' => $ext,
                 'company_id' => $company->id,
+                'uc' => str::random(10),
             ]);
 
             $mount->copy('local://' . $filepath, 'default://' . $newpath);
@@ -555,7 +556,7 @@ class AdminController extends Controller
             //echo json_encode($slash) . '<br>';
 
         }
-        $summary = "{$Auth::user()->username} Imported bulk files";
+        $summary = Auth::user()->username . "  Imported bulk files";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,

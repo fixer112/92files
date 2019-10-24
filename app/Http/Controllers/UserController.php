@@ -19,7 +19,7 @@ class UserController extends Controller
     {
 
         $this->authType = request()->wantsJson() ? 'auth:api' : 'auth';
-        $this->middleware($this->authType);
+        $this->middleware($this->authType)->except(['showFolderUc', 'showFileUc', 'showCompanyUc']);
         //$this->middleware('can:viewBlade,user')->except(['showCustomFolder', 'checkFolder']);
 
         /* if ($user = User::find(request()->user)) {
@@ -111,15 +111,41 @@ class UserController extends Controller
         return view('user.viewcustomfolder', \compact('user'));
     }
 
-    public function showFolderUC($uc)
+    public function showFolderUc($uc)
     {
         $folder = Folder::where('uc', $uc)->first();
+        //return $folder;
         if (!$folder) {
             \abort(404);
         }
         $files = $folder->files;
         //return $files;
         return view('user.viewfolderuc', \compact('files', 'folder'));
+
+    }
+    public function showFileUc($uc)
+    {
+        $file = File::where('uc', $uc)->first();
+        //return $folder;
+        if (!$file) {
+            \abort(404);
+        }
+        //$files = $folder->files;
+        //return $files;
+        //return view('user.viewfileuc', \compact('file'));
+        return response()->file(\storage_path('/app/public/' . $file->path));
+
+    }
+    public function showCompanyUc($uc)
+    {
+        $company = Company::where('uc', $uc)->first();
+        //return $folder;
+        if (!$company) {
+            \abort(404);
+        }
+        // $files = $folder->files;
+        //return $files;
+        return view('user.viewcompanyuc', \compact('company'));
 
     }
 
@@ -134,7 +160,7 @@ class UserController extends Controller
             'user_id' => 'required|integer',
             'admin_id' => 'required|integer',
             'files' => 'required',
-            'files.*' => 'mimes:doc,pdf,docx,jpg,jpeg,png,gif|max:1024',
+            'files.*' => /* 'mimes:doc,pdf,docx,jpg,jpeg,png,gif| */'max:1024',
             'uc' => 'nullable|string|exists:companies',
         ];
 
@@ -154,7 +180,7 @@ class UserController extends Controller
             $name = $file->getClientOriginalName();
             $name = pathinfo($name, PATHINFO_FILENAME);
 
-            request()->merge(['filename' => $name]);
+            request()->merge(['filename' => $name, 'uc' => Str::random(10)]);
             //return request()->all();
             $file = $this->uploadFile($file);
             if ($company) {
@@ -163,7 +189,7 @@ class UserController extends Controller
 
         }
         $user = $file->user;
-        $summary = Auth::user()->username . " added {count($files) files for user <a href='/user/{$user->id}'> {$user->username}</a>}";
+        $summary = Auth::user()->username . " added " . count($files) . " files for user <a href='/user/{$user->id}'> {$user->username}</a>";
         Activity::create([
             'user_id' => Auth::id(),
             'summary' => $summary,

@@ -70,7 +70,9 @@
                                     {{$file->format}}
                                 </td>
                                 <td>
+                                    @if($file->company)
                                     <a href="/company/{{$file->company->id}}">{{$file->company->name}}</a>
+                                    @endif
                                 </td>
                                 <td>
                                     {{$file->created_at}}

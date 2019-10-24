@@ -74,7 +74,7 @@ class Controller extends BaseController
         }
 
         $newFile = new File;
-        $newFile->fill(request()->only(['filename', 'type', 'user_id', 'admin_id']))->save();
+        $newFile->fill(request()->only(['filename', 'type', 'user_id', 'admin_id', 'uc']))->save();
         $newFile->update([
             'path' => $path,
             'format' => $extension,
