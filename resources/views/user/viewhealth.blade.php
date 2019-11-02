@@ -5,7 +5,7 @@
 
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{{strtoupper($folder->foldername).'-'.$folder->uc}}</title>
+    <title>{{env('APP_NAME')}}|{{ucfirst(request()->username)}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="{{ asset('assets\app\images\logo.png')}}">
     <link href="{{ asset('assets\app\vendor\font-awesome\5.0.6\css\fontawesome-all.css')}}" rel="stylesheet">
@@ -33,8 +33,8 @@
                 <!-- Page Header -->
                 <div class="page-header row no-gutters py-4">
                     <div class="col-12 col-sm-4 text-center text-sm-left mb-4 mb-sm-0">
-                        <span class="text-uppercase page-subtitle">Unique Folder</span>
-                        <h3 class="page-title">{{strtoupper($folder->foldername).'-'.$folder->uc}}</h3>
+                        <span class="text-uppercase page-subtitle">Health Folder</span>
+                        <h3 class="page-title">{{ucfirst(request()->username)}}</h3>
                     </div>
                 </div>
                 <!-- End Page Header -->
@@ -49,9 +49,9 @@
                                 <th>File Format</th>
                                 <th>UC</th>
                                 <th>Company</th>
+                                <th>Custom Folders</th>
                                 <th>Date Created</th>
                                 <th>Date Modified</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -80,11 +80,7 @@
                                 <td>
                                     {{$file->updated_at}}
                                 </td>
-                                <td>
-                                    <button class="btn btn-success"><a href="/file/{{$folder->id}}/{{$file->id}}">
-                                            <i class="material-icons">cloud</i>
-                                        </a></button>
-                                </td>
+
                             </tr>
                             @endforeach
                         </tbody>

@@ -19,7 +19,7 @@ class UserController extends Controller
     {
 
         $this->authType = request()->wantsJson() ? 'auth:api' : 'auth';
-        $this->middleware($this->authType)->except(['showFolderUc', 'showFileUc', 'showCompanyUc']);
+        $this->middleware($this->authType)->except(['showFolderUc', 'showFileUc', 'showCompanyUc', 'showHealth']);
         //$this->middleware('can:viewBlade,user')->except(['showCustomFolder', 'checkFolder']);
 
         /* if ($user = User::find(request()->user)) {
@@ -67,7 +67,7 @@ class UserController extends Controller
             }, 1)->addColumn('company', function (File $file) {
                 $company = $file->company;
 
-                return $company ? '<a href="/company/' . $company->id . '">' . $company->name . '</a>' : "";
+                return $company ? '<a href="/company/uc/' . $company->uc . '">' . $company->name . '</a>' : "";
             })->rawColumns(['action', 'custom_folders', 'company'])->toJson();
 
         }
@@ -101,7 +101,7 @@ class UserController extends Controller
                 return $boxes;
             }, 1)->addColumn('company', function (File $file) {
                 $company = $file->company;
-                return $company ? '<a href="/company/' . $company->id . '">' . $company->name . '</a>' : "";
+                return $company ? '<a href="/company/uc/' . $company->uc . '">' . $company->name . '</a>' : "";
             })->rawColumns(['action', 'custom_folders', 'company'])->toJson();
 
         }
@@ -126,13 +126,10 @@ class UserController extends Controller
     public function showFileUc($uc)
     {
         $file = File::where('uc', $uc)->first();
-        //return $folder;
+
         if (!$file) {
             \abort(404);
         }
-        //$files = $folder->files;
-        //return $files;
-        //return view('user.viewfileuc', \compact('file'));
         return response()->file(\storage_path('/app/public/' . $file->path));
 
     }
@@ -143,9 +140,19 @@ class UserController extends Controller
         if (!$company) {
             \abort(404);
         }
-        // $files = $folder->files;
-        //return $files;
         return view('user.viewcompanyuc', \compact('company'));
+
+    }
+
+    public function showHealth($username)
+    {
+        $user = User::where('username', $username)->first();
+        if (!$user) {
+            \abort(404);
+        }
+        //return $user;
+        $files = $user->files->where('type', 'health');
+        return view('user.viewhealth', \compact('files'));
 
     }
 

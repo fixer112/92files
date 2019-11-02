@@ -85,6 +85,7 @@ Route::get('custom_folder/{folder}', 'UserController@showCustomFolder');
 Route::get('folder/uc/{uc}', 'UserController@showFolderUc');
 Route::get('file/uc/{uc}', 'UserController@showFileUc');
 Route::get('company/uc/{uc}', 'UserController@showCompanyUc');
+Route::get('health/{username}', 'UserController@showHealth');
 
 Route::post('/file/{file}/folder/{folder}', 'UserController@checkFolder');
 Route::get('/switch_status/{user}', 'UserController@switchStatus');
