@@ -92,8 +92,8 @@ class User extends Authenticatable
     {
         return $this->pic ? Storage::url($this->pic) /* '/storage/' . $this->pic */ : '\assets\app\images\avatars\0.jpeg';
     }
-    public function setPasswordAttribute($password)
-    {
-        $this->attributes['password'] = \bcrypt($password);
-    }
+    /* public function setPasswordAttribute($password)
+{
+$this->attributes['password'] = \bcrypt($password);
+} */
 }
