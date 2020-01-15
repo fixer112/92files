@@ -1,236 +1,337 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="no-js" lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <title>{{env('APP_NAME')}}</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <head>
 
+        <!--- basic page needs
+    ================================================== -->
+        <meta charset="utf-8">
+        <title>92 Files::: a cloud-based resource app</title>
+        <meta name="description" content="">
+        <meta name="author" content="">
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- mobile specific metas
+    ================================================== -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <!-- CSS
+    ================================================== -->
+        <link rel="stylesheet" href="{{ asset('home\base.css')}}">
+        <link rel="stylesheet" href="{{ asset('home\vendor.css')}}">
+        <link rel="stylesheet" href="{{ asset('home\main.css')}}">
 
-    <link href="https://getbootstrap.com/docs/4.0/examples/pricing/pricing.css" rel="stylesheet">
-    <script src="{{ asset('assets\app\scripts\vue.js')}}"></script>
-</head>
+        <!-- script
+    ================================================== -->
+        <script src="{{ asset('home\modernizr.js')}}"></script>
+        <script src="{{ asset('home\pace.min.js')}}"></script>
 
-<body>
+        <!-- favicons
+    ================================================== -->
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <script src="{{ asset('assets\app\scripts\vue.js')}}"></script>
 
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <h5 class="my-0 mr-md-auto font-weight-normal">{{env('APP_NAME')}}</h5>
-        <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="{{url('/')}}">Home</a>
-            <a class="p-2 text-dark" href="{{url('about')}}">About</a>
-            @if(Auth::check())
-            <a class="p-2 text-dark" href="{{url(Auth::user()->routeRole())}}" title="Dashbord">Dashbord</a>
+    </head>
 
-            @endif
-        </nav>
-        @if(Auth::check())
-        <a class="btn btn-outline-primary" href="{{url('logout')}}" title="login">Sign Out</a>
-        @else
-        <a class="btn btn-outline-primary" href="{{url('login')}}" title="login">Sign In</a>
-        @endif
+    <body id="top">
 
-    </div>
-
-
-
-    <div class="container" id="home">
-        <div class="card-deck mb-3 text-center">
-            {{-- <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Search File</h4>
-                </div>
-
-
-
-
-
-                <!-- i have three cards below, each one has a button and an input field -->
-
-
-                <div class="card-body d-flex flex-column">
-                    <!-- <h5 class="card-title" style="font-size: 200%">Longest Word</h5> -->
-                    <p class="card-text" style="font-size: 100%">a Function to find and display the longest word in a
-                        phrase, namely the first longest word in case multiple equal size words are present </p>
-
-                    <input type="text" name="1Input" class="mt-auto" id="cell1Input">
-                    <input type="submit" class="btn btn-primary" name="1Button" value="Click Me!" id="cell1Button" />
-                    <br>
-                    <span id="1FunctionResult"></span>
-                </div>
-            </div>
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Search Folder</h4>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <!-- <h5 class="card-title" style="font-size: 200%">Reverse Text</h5> -->
-                    <p class="card-text" style="font-size: 100%">a Function to reverese letters in each word </p>
-
-                    <input type="text" name="2Input" class="mt-auto" id="cell2Input">
-                    <input type="button" class="btn btn-primary" name="2Button" value="Click me!" id="cell2Button">
-                    <br>
-                    <span id="2FunctionResult"></span>
-                </div>
-            </div>
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Search Company</h4>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <!-- <h5 class="card-title"  style="font-size: 200%">Capitalize</h5> -->
-                    <p class="card-text" style="font-size: 100%">a Function to split words and capitalize all initial
-                        letters in each word</p>
-
-                    <input type="text" name="3Input" class="mt-auto" id="cell3Input">
-                    <input type="button" class="btn btn-primary" name="3Button" value="Click me!" id="cell3Button">
-                    <br>
-                    <span id="3FunctionResult"></span>
-                </div>
-            </div> --}}
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Search {{env('APP_NAME')}}</h4>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <p class="card-text" style="font-size: 100%">
-                        Select what to search, and input the search query.
-                    </p>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <select class="custom-select" v-model="type">
-                                <option value="">Select</option>
-                                <option value="file">File UC</option>
-                                <option value="company">Company UC</option>
-                                <option value="folder">Folder UC</option>
-                                <option value="health">Username Health Folder</option>
-                            </select>
-                            {{-- <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select</button>
-                            <div class="dropdown-menu">
-                                <span class="dropdown-item" @click="link('/file/uc/')">File</span>
-                                <span class="dropdown-item" @click="link('/company/uc/')">Company</span>
-                                <span class="dropdown-item" @click="link('/folder/uc/')">Folder</span>
-                                <span class="dropdown-item" @click="link('/health/')">Health Folder</span>
-                            </div> --}}
-                            {{-- <div role="separator" class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Separated link</a> --}}
-                        </div>
-                        <input type="text" class="form-control" aria-label="Text input with dropdown button" v-model="b"
-                            :placeholder="holder">
-                        <a :href="a && b ? a+b : ''" class="btn btn-primary" target="_blank">Search</a>
-                    </div>
-                    <br>
-                    <span id="3FunctionResult"></span>
-                </div>
-            </div>
+        <div id="preloader">
+            <div id="loader"></div>
         </div>
 
 
+        <!-- header 
+    ================================================== -->
+        <header class="s-header">
 
-        <footer class="pt-4 my-md-5 pt-md-5 border-top">
-            <div class="row">
-                <div class="col-12 col-md">
-                    <img class="mb-2" src="{{ asset('assets\app\images\logo.png')}}" alt="" width="24" height="24">
-                    <small class="d-block mb-3 text-muted">&copy; 2017-2018</small>
-                </div>
-                {{-- <div class="col-6 col-md">
-                    <h5>Features</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Cool stuff</a></li>
-                        <li><a class="text-muted" href="#">Random feature</a></li>
-                        <li><a class="text-muted" href="#">Team feature</a></li>
-                        <li><a class="text-muted" href="#">Stuff for developers</a></li>
-                        <li><a class="text-muted" href="#">Another one</a></li>
-                        <li><a class="text-muted" href="#">Last time</a></li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>Resources</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Resource</a></li>
-                        <li><a class="text-muted" href="#">Resource name</a></li>
-                        <li><a class="text-muted" href="#">Another resource</a></li>
-                        <li><a class="text-muted" href="#">Final resource</a></li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md">
-                    <h5>About</h5>
-                    <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Team</a></li>
-                        <li><a class="text-muted" href="#">Locations</a></li>
-                        <li><a class="text-muted" href="#">Privacy</a></li>
-                        <li><a class="text-muted" href="#">Terms</a></li>
-                    </ul>
-                </div> --}}
+            <div class="header-logo">
+                <a class="site-logo" href="/">
+                    <img src="images/logo.jpg" alt="Homepage">
+                </a>
             </div>
-        </footer>
-    </div>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-    </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-    </script>
-    <script>
-        new Vue({
-    el: "#home",
-    data: function() {
-    return {
-    a:"",
-    b:"",
-    type:"",
-    holder:"",
-    };
-    },
-    methods: {
-    link(type){
-        switch(type) {
-        case 'file':
-        this.a = '/file/uc/';
-        this.holder = 'Enter file unique code';
-        break;
-        case 'folder':
-        this.a = '/folder/uc/';
-        this.holder = 'Enter folder unique code';
-        break;
-        case 'company':
-        this.a = '/company/uc/';
-        this.holder = 'Enter company unique code';
-        break;
-        case 'health':
-        this.a = '/health/';
-        this.holder = 'Enter username';
-        break;
-        //default:
-        // code block
-        }
-        
-        this.b = "";
-        console.log(this.a);
-    }
-    }
-    ,
-    watch: {
-    type(n){
-        this.link(n);
-    }
-    },
-    mounted() {
-    }
-    });
-    </script>
-</body>
+            <nav class="row header-nav-wrap wide">
+                <ul class="header-main-nav">
+                    <li></a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    @if(Auth::check())
+                    <li><a class="smoothscroll" href="{{url(Auth::user()->routeRole())}}">Dashbord</a></li>
 
-</html>
+                    @endif
+                    @if(Auth::check())
+                    <li><a class="smoothscroll" href="{{url('logout')}}">Log In</a></li>
+                    @else
+                    <li><a class="smoothscroll" href="{{url('login')}}">Log In</a></li>
+                    @endif
+                    <li></a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li><a class="smoothscroll" href="#" title="home">Home</a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li><a class="smoothscroll" href="#" title="features">Report</a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li><a class="smoothscroll" href="#" title="faq">FAQ</a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li></a></li>
+                    <li><a href="#" title="blog">92F Blog</a></li>
+                </ul>
+
+                <ul class="header-social">
+                    <li><a href="#0"><i class="fab fa-facebook-f" aria-hidden="true"></i></a></li>
+                    <li><a href="#0"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
+                    <li><a href="#0"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
+                </ul>
+            </nav>
+
+            <a class="header-menu-toggle" href="#"><span>Menu</span></a>
+            <br />
+        </header> <!-- end header -->
+        <p> </p>
+        <p> </p>
+
+        <!-- home
+    ================================================== -->
+        <section id="home" class="s-home target-section">
+
+            <div class="home-image-part"></div>
+
+            <div class="home-content">
+
+
+
+
+
+
+                <div class="about-desc__slide">
+                    <!-- process
+    ================================================== -->
+                    <section id="process" class="s-process">
+
+
+
+                        <div class="col-full text-center" data-aos="fade-up">
+                            <div class="card-header">
+
+                                <h4 class="my-0 font-weight-normal">Search 92Files</h4>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <p class="card-text" style="font-size: 100%">
+                                    select document and verify.
+                                </p>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <select class="custom-select" v-model="type" style="font-size: x-large;">
+                                            <option value="">Select file</option>
+                                            <option value="file">File UC</option>
+                                            <option value="company">Company UC</option>
+                                            <option value="folder">Folder UC</option>
+                                            <option value="health">Username Health Folder</option>
+                                        </select>
+
+
+
+                                    </div>
+
+
+                                    </p>
+
+
+
+
+
+                                    <input type="text" class="form-control" aria-label="Text input with dropdown button"
+                                        v-model="b" :placeholder="holder" style="font-size: x-large;">
+
+                                    <a :href="a && b ? a+b : ''" class="btn btn-primary" target="_blank">Search
+
+                                        <span id="3FunctionResult"></span></a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- end process -->
+                    </section> <!-- end s-process -->
+                    <div class="row home-content__main wide">
+
+                        <div>
+                            <h1>
+                                See The Unique Resource<br>
+                                Web App That Does It All.
+                            </h1>
+
+                            <h3>
+                                92files app: a cloud-based digital document resource centre for all individuals and
+                                organizations.
+                            </h3>
+
+                            <div class="home-content__button">
+                                <!--<a class="btn-video" href="https://player.vimeo.com/video/14592941?color=00a650&title=0&byline=0&portrait=0" data-lity>-->
+
+                                </a>
+                                <a href="#" class="smoothscroll btn btn--primary btn--large">
+                                    Log In
+                                </a>
+                            </div>
+
+                        </div> <!-- end home-content__main -->
+
+                        <a href="#about" class="home-scroll smoothscroll">
+                            <span class="home-scroll__text">Scroll Down</span>
+                            <span class="home-scroll__icon"></span>
+                        </a>
+
+                    </div> <!-- end home-content -->
+
+        </section> <!-- end s-home -->
+
+
+        <!-- about
+    ================================================== -->
+        <section id="about" class="s-about target-section">
+
+            <div class="row section-header narrower align-center" data-aos="fade-up">
+                <div class="col-full">
+                    <h1 class="display-1">
+                        ABOUT
+                    </h1>
+                    <p class="lead">
+
+                        <p>92files is a cloud based resource centre that is acessible to everybody in Nigeria that is
+                            being designed to carefully arrange and store documents for individuals in an orderly and
+                            secured way.
+                        </p>
+                        <p>It helps to save document in the advent of theft, fire disaster, loss in transit, natural
+                            disaster, etc and also show document authenticity. 92files helps personell involved in
+                            administration by reducing the emphasis on paper documents which helps during employment,
+                            screening, submission of document by doing background check on files. <p>
+
+                            </p>
+                </div>
+            </div> <!-- end section-header -->
+
+            <div class="row about-desc" data-aos="fade-up">
+                <div class="col-full slick-slider about-desc__slider">
+
+                    <div class="about-desc__slide">
+                        <h3 class="item-title">Secure.</h3>
+
+                        <p>
+
+                        </p>
+                    </div> <!-- end about-desc__slide -->
+
+                    <div class="about-desc__slide">
+                        <h3 class="item-title">User-Friendly.</h3>
+
+                        <p>
+
+                        </p>
+                    </div> <!-- end about-desc__slide -->
+
+                    <div class="about-desc__slide">
+                        <h3 class="item-title">Powerful.</h3>
+
+                        <p>
+
+                        </p>
+                    </div> <!-- end about-desc__slide -->
+
+                </div> <!-- end about-desc -->
+
+
+
+        </section> <!-- end s-about -->
+
+
+
+        <div class="row process-bottom-image" data-aos="fade-up">
+            <!--<img src="images/phone-app-screens-1000.png" 
+                 srcset="images/phone-app-screens-600.png 600w, 
+                         images/phone-app-screens-1000.png 1000w, 
+                         images/phone-app-screens-2000.png 2000w" 
+                 sizes="(max-width: 2000px) 100vw, 2000px" 
+                 alt="App Screenshots"> -->
+        </div>
+
+        </section> <!-- end s-process -->
+
+
+
+        </div> <!-- end features -->
+
+        </div> <!-- end section-header -->
+
+        <div class="go-top">
+            <a class="smoothscroll" title="Back to Top" href="#top"></a>
+        </div>
+
+
+        <!-- Java Script
+    ================================================== -->
+        <script src="{{ asset('home\jquery-3.2.1.min.js')}}"></script>
+        <script src="{{ asset('home\plugins.js')}}"></script>
+        <script src="{{ asset('home\main.js')}}"></script>
+        <script>
+            new Vue({
+            el: "#home",
+            data: function() {
+            return {
+            a:"",
+            b:"",
+            type:"",
+            holder:"",
+            };
+            },
+            methods: {
+            link(type){
+                this.holder = ''
+                switch(type) {
+                case 'file':
+                this.a = '/file/uc/';
+                this.holder = 'Enter file unique code';
+                break;
+                case 'folder':
+                this.a = '/folder/uc/';
+                this.holder = 'Enter folder unique code';
+                break;
+                case 'company':
+                this.a = '/company/uc/';
+                this.holder = 'Enter company unique code';
+                break;
+                case 'health':
+                this.a = '/health/';
+                this.holder = 'Enter username';
+                break;
+                //default:
+                // code block
+                }
+                
+                this.b = "";
+                console.log(this.a);
+            }
+            }
+            ,
+            watch: {
+            type(n){
+                this.link(n);
+            }
+            },
+            mounted() {
+            }
+            });
+        </script>
+
+    </body>
