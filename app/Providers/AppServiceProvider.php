@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
