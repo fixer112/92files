@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'username' => 'suretee',
+            'username' => 'superadmin',
             'fname' => 'Sure',
             'lname' => 'Tee',
             'addr' => 'No 10',
@@ -62,7 +62,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([
-            'username' => 'habdej',
+            'username' => 'user',
             'fname' => 'Habeeb Lawal',
             'lname' => 'lawwy',
             'addr' => 'No 10',
