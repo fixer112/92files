@@ -55,7 +55,7 @@ class Controller extends BaseController
 
     }
     public function uploadFile($file, File $uploadedFile = null)
-    {
+    { 
         //$file = $re
         $extension = $file->getClientOriginalExtension();
 

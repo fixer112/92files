@@ -56,31 +56,32 @@
                     <li></a></li>
                     <li></a></li>
                     @if(Auth::check())
-                    <li><a class="smoothscroll" href="{{url(Auth::user()->routeRole())}}">Dashbord</a></li>
+                    <li><a class="" href="{{url(Auth::user()->routeRole())}}">Dashbord</a></li>
 
                     @endif
                     @if(Auth::check())
-                    <li><a class="smoothscroll" href="{{url('logout')}}">Log In</a></li>
+                    {{-- smoothscroll --}}
+                    <li><a class="" href="{{url('logout')}}">Log Out</a></li>
                     @else
-                    <li><a class="smoothscroll" href="{{url('login')}}">Log In</a></li>
+                    <li><a class="" href="{{url('login')}}">Log In</a></li>
                     @endif
                     <li></a></li>
                     <li></a></li>
                     <li></a></li>
                     <li></a></li>
-                    <li><a class="smoothscroll" href="#" title="home">Home</a></li>
+                    <li><a class="" href="#" title="home">Home</a></li>
                     <li></a></li>
                     <li></a></li>
                     <li></a></li>
                     <li></a></li>
-                    <li><a class="smoothscroll" href="#" title="features">Report</a></li>
+                    <li><a class="" href="#" title="features">Report</a></li>
                     <li></a></li>
                     <li></a></li>
                     <li></a></li>
                     <li></a></li>
                     <li></a></li>
                     <li></a></li>
-                    <li><a class="smoothscroll" href="#" title="faq">FAQ</a></li>
+                    <li><a class="" href="#" title="faq">FAQ</a></li>
                     <li></a></li>
                     <li></a></li>
                     <li></a></li>
@@ -181,14 +182,14 @@
                                 <!--<a class="btn-video" href="https://player.vimeo.com/video/14592941?color=00a650&title=0&byline=0&portrait=0" data-lity>-->
 
                                 </a>
-                                <a href="#" class="smoothscroll btn btn--primary btn--large">
+                                <a href="#" class=" btn btn--primary btn--large">
                                     Log In
                                 </a>
                             </div>
 
                         </div> <!-- end home-content__main -->
 
-                        <a href="#about" class="home-scroll smoothscroll">
+                        <a href="#about" class="home-scroll ">
                             <span class="home-scroll__text">Scroll Down</span>
                             <span class="home-scroll__icon"></span>
                         </a>
@@ -275,7 +276,7 @@
         </div> <!-- end section-header -->
 
         <div class="go-top">
-            <a class="smoothscroll" title="Back to Top" href="#top"></a>
+            <a class="" title="Back to Top" href="#top"></a>
         </div>
 
 
