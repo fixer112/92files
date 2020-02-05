@@ -9,7 +9,7 @@
             style="overflow:hidden;box-shadow:inset 0 4px 0 0 #17c671;border-radius:.625rem">
             <form action="{{url('edit_admin/'.request()->user->id)}}" method="POST" enctype="multipart/form-data"
                 class="py-4">
-                @method('PUT')
+                @method('PUT') 
                 @csrf
                 <div class="card-body p-0">
                     <div class="form-row mx-4 margin-top20 margin-bottom50">

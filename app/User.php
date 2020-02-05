@@ -88,6 +88,10 @@ class User extends Authenticatable
     {
         return $this->role != 'user' ? 'admin' : 'user/' . $this->id;
     }
+    public function getFullNameAttribute()
+    {
+        return $this->attributes['fname'] . ' ' . $this->attributes['lname'];
+    }
     public function photo()
     {
         return $this->pic ? Storage::url($this->pic) /* '/storage/' . $this->pic */ : '\assets\app\images\avatars\0.jpeg';

@@ -84,6 +84,13 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link " href="{{url('/bulk_company')}}">
+                    <i class="material-icons">&#xE227;</i>
+                    <span>Add Bulk Organizations</span>
+                </a>
+            </li>
+
         </ul>
         @endif
 

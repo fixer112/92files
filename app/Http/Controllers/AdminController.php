@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Activity;
 use App\Company;
 use App\File;
+use App\Imports\CompanysImport;
 use App\Imports\UsersImport;
 use App\User;
 use Carbon\Carbon;
@@ -319,6 +320,7 @@ class AdminController extends Controller
             $this->uploadCompanyLogo($company);
 
         }
+
         $summary = Auth::user()->username . " created Company <a href='/company/{$company->id}'> {$company->name}</a>";
         Activity::create([
             'user_id' => Auth::id(),
@@ -424,6 +426,47 @@ class AdminController extends Controller
         ]);
 
         request()->session()->flash('success', 'Organization updated successfully');
+        return back();
+
+    }
+    public function showImportCompanys()
+    {
+        $this->authorize('create', Company::class);
+
+        return view('admin.company.bulkcompany');
+
+    }
+    public function importCompanys()
+    {
+        $this->authorize('create', Company::class);
+        $validate = [
+            'file' => 'required|mimetypes:application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+
+        ];
+
+// try {
+        $import = new CompanysImport;
+        $import->import(request()->file('file'));
+//} catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+        $failures = $import->failures();
+        $errors = '<center><h4>Error occured during user upload</h4><h6>The following affected rows was not uploaded </h6></center>';
+        if (count($failures) > 0) {
+            foreach ($failures as $failure) {
+                $errors .= '<p>' . \implode(',', $failure->errors()) . ' at row ' . $failure->row() . ' where email is ' . $failure->values()['email'] . '</p>';
+            }
+            request()->session()->put('fail', $errors);
+            return redirect('/errors');
+        }
+
+        $summary = Auth::user()->username . "  Imported bulk Organisations";
+        Activity::create([
+            'user_id' => Auth::id(),
+            'summary' => $summary,
+
+        ]);
+
+        request()->session()->flash('success', 'All Organisations Uploaded');
+
         return back();
 
     }

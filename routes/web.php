@@ -92,6 +92,9 @@ Route::get('/switch_status/{user}', 'UserController@switchStatus');
 Route::get('/bulk_user', 'AdminController@showImportUsers');
 Route::post('/bulk_user', 'AdminController@importUsers');
 
+Route::get('/bulk_company', 'AdminController@showImportCompanys');
+Route::post('/bulk_company', 'AdminController@importCompanys');
+
 Route::get('/stats', 'AdminController@allStatistics');
 
 //Route::get('/bulk_file', 'AdminController@showImportFiles');

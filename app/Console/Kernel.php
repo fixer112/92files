@@ -26,10 +26,11 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('migrate:fresh --seed')->dailyAt('00:00')->when(function () {
+        $schedule->command('migrate:fresh --seed')->monthly() /* ->dailyAt('00:00') */->when(function () {
             return env('APP_ENV') == 'local';
             //return false;
         });
+
     }
 
     /**
@@ -39,7 +40,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
