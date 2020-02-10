@@ -35,10 +35,15 @@
                         <div class="col-12 col-sm-4 text-center text-sm-left mb-4 mb-sm-0">
                             <span class="text-uppercase page-subtitle">Unique Folder</span>
                             <h3 class="page-title">{{strtoupper($folder->foldername).'-'.$folder->uc}}</h3>
-
-                            <img width="50px" class="rounded-circle mr-2 mt-2" src="{{$folder->user->photo()}}"
-                                alt="User Avatar">
-                            {{$folder->user->full_name}}
+                            <div>
+                                <img width="50px" class="rounded-circle mr-2 mt-2" src="{{$folder->user->photo()}}"
+                                    alt="User Avatar">
+                                <div>
+                                    {{$folder->user->full_name}} (<small>{{$folder->user->sex}}</small>)
+                                    <br>
+                                    {{$folder->user->legalAge()}}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- End Page Header -->

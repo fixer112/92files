@@ -96,6 +96,11 @@ class User extends Authenticatable
     {
         return $this->pic ? Storage::url($this->pic) /* '/storage/' . $this->pic */ : '\assets\app\images\avatars\0.jpeg';
     }
+
+    public function legalAge()
+    {
+        return date('Y') - $this->dob->format('Y') >= 18 ? 'Above 18 years' : 'Below 18 years';
+    }
     /* public function setPasswordAttribute($password)
 {
 $this->attributes['password'] = \bcrypt($password);

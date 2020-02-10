@@ -63,7 +63,7 @@ class UsersTableSeeder extends Seeder
 
         DB::table('users')->insert([
             'username' => 'user',
-            'fname' => 'Habeeb Lawal',
+            'fname' => 'Habeeb',
             'lname' => 'lawwy',
             'addr' => 'No 10',
             'role' => 'user',

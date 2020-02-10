@@ -46,7 +46,7 @@
 
             <div class="header-logo">
                 <a class="site-logo" href="/">
-                    <img src="images/logo.jpg" alt="Homepage">
+                    <img src="{{ asset('assets\app\images\92file.jpeg')}}" alt="Homepage">
                 </a>
             </div>
 
