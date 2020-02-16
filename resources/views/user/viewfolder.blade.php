@@ -157,6 +157,7 @@ console.log(response.data)
 
 })
 .catch((error)=>{
+    console.log(error.response);
 $.notify(error.response.data.message, "error");
 reverseChecks(folders);
 window.table.destroy();
