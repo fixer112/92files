@@ -23,6 +23,7 @@
         <link rel="stylesheet"
             href="{{ asset('assets\app\vendor\DataTables\Responsive-2.2.2/css/responsive.dataTables.min.css')}}">
         <script src="{{ asset('assets\app\vendor\jquery\jquery-3.3.1.min.js')}}"></script>
+        <script src="{{ asset('js\app.js')}}"></script>
         @yield('head')
     </head>
 

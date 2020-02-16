@@ -145,7 +145,7 @@ function del(id){
 function checkFolder(fileId,folderId){
 var url = '/file/'+fileId+'/folder/'+folderId+'/?api_token='+'{{Auth::user()->api_token}}';
 var folders = $('.folder-check');
-
+console.log(url);
 reverseChecks(folders);
 
 axios.post(url)
