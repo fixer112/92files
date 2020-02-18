@@ -88,6 +88,7 @@ Route::get('company/uc/{uc}', 'UserController@showCompanyUc');
 Route::get('health/{username}', 'UserController@showHealth');
 
 Route::post('/file/{file}/folder/{folder}', 'UserController@checkFolder');
+Route::get('/file/{file}/folder/{folder}', 'UserController@checkFolder');
 Route::get('/switch_status/{user}', 'UserController@switchStatus');
 Route::get('/bulk_user', 'AdminController@showImportUsers');
 Route::post('/bulk_user', 'AdminController@importUsers');

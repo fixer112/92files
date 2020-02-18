@@ -72,6 +72,7 @@
         @endcan
         <div class="mt-3">
             {{Auth::user()->isAdmin() ? 'User is ': 'You are '}} {{$user->active ? 'Active': 'Suspended'}} and
+
             {{date('Y') - $user->dob->format('Y') >= 18 ? 'above 18 years': 'below 18 years'}}
         </div>
         @if(Auth::user()->isAdmin())
